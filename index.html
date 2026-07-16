@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oscillo — Révisions physique des signaux</title>
+<title>Oscillo — Révisions</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
@@ -12,14 +12,12 @@
 <style>
 :root{
   --bg:#0a0f0d;
-  --bg-panel:#0e1512;
   --card-bg:#0f1613;
   --grid-line:rgba(120,255,180,0.06);
   --phosphor:#5be3a3;
   --phosphor-bright:#9dffcf;
   --phosphor-dim:#3a8f6e;
   --amber:#ffb454;
-  --amber-dim:#b3803a;
   --ink:#eaf6ef;
   --ink-dim:#8fada0;
   --ink-faint:#5c7469;
@@ -64,13 +62,22 @@ h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px
 .review-cta{display:block;width:100%;background:var(--phosphor);color:#052018;font-family:var(--font-mono);font-weight:700;font-size:14px;letter-spacing:0.03em;text-transform:uppercase;border:none;border-radius:6px;padding:16px;cursor:pointer;margin-bottom:40px;transition:background 0.15s, transform 0.08s;}
 .review-cta:hover{background:var(--phosphor-bright);}
 .review-cta:active{transform:scale(0.99);}
-.review-cta:disabled{background:var(--ink-faint);color:var(--bg);cursor:default;}
 .review-cta .sub{display:block;font-family:var(--font-body);text-transform:none;font-weight:400;letter-spacing:0;font-size:12px;color:#0a2a20;margin-top:3px;opacity:0.75;}
+.review-cta:disabled{opacity:0.4;cursor:default;}
 
 .section-label{font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 14px;display:flex;align-items:center;gap:10px;}
 .section-label::after{content:'';flex:1;height:1px;background:var(--border);}
 
-.chapter-list{display:flex;flex-direction:column;gap:10px;margin-bottom:40px;}
+.subject-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.subject-card{background:var(--card-bg);border:1px solid var(--border);border-radius:6px;padding:16px;cursor:pointer;transition:border-color 0.15s, background 0.15s;}
+.subject-card:hover{border-color:var(--border-strong);background:#111a16;}
+.subject-card.empty{opacity:0.55;}
+.subj-code{font-family:var(--font-mono);font-size:11px;color:var(--phosphor-dim);border:1px solid rgba(123,255,196,0.25);border-radius:3px;padding:2px 6px;display:inline-block;margin-bottom:10px;}
+.subj-name{font-family:var(--font-display);font-size:16px;color:var(--ink);margin-bottom:6px;}
+.subj-meta{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-faint);}
+.subj-meta.due{color:var(--amber);}
+
+.chapter-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
 .chapter-row{background:var(--card-bg);border:1px solid var(--border);border-radius:6px;padding:16px 18px;cursor:pointer;transition:border-color 0.15s, background 0.15s;display:flex;align-items:center;gap:16px;}
 .chapter-row:hover{border-color:var(--border-strong);background:#111a16;}
 .ch-code{font-family:var(--font-mono);font-size:13px;color:var(--phosphor);border:1px solid var(--phosphor-dim);border-radius:4px;padding:5px 9px;flex-shrink:0;min-width:34px;text-align:center;}
@@ -82,15 +89,22 @@ h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px
 .ch-meta .due{color:var(--amber);}
 .ch-arrow{color:var(--ink-faint);font-family:var(--font-mono);font-size:18px;flex-shrink:0;}
 
+.empty-state{background:var(--card-bg);border:1px dashed var(--border-strong);border-radius:6px;padding:28px 22px;text-align:center;color:var(--ink-dim);font-size:13.5px;line-height:1.7;margin-bottom:16px;}
+.empty-state b{color:var(--ink);}
+
 .footer-note{text-align:center;font-family:var(--font-mono);font-size:10.5px;color:var(--ink-faint);margin-top:40px;line-height:1.8;}
 .reset-link{color:var(--ink-faint);text-decoration:underline;cursor:pointer;background:none;border:none;font-family:var(--font-mono);font-size:10.5px;padding:0;}
 .reset-link:hover{color:var(--danger);}
 
 .hidden{display:none !important;}
 
-.session-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
 .back-btn{font-family:var(--font-mono);font-size:12px;color:var(--ink-dim);background:none;border:1px solid var(--border);border-radius:5px;padding:7px 12px;cursor:pointer;}
 .back-btn:hover{border-color:var(--border-strong);color:var(--ink);}
+
+.subject-header{display:flex;align-items:center;gap:14px;margin-bottom:24px;}
+.subject-header h1{margin:0;font-size:24px;}
+
+.session-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
 .progress-track{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;margin:0 16px;overflow:hidden;}
 .progress-fill{height:100%;background:var(--phosphor);transition:width 0.25s;}
 .progress-count{font-family:var(--font-mono);font-size:12px;color:var(--ink-faint);white-space:nowrap;}
@@ -143,6 +157,7 @@ h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px
   .stats-row{grid-template-columns:1fr 1fr 1fr;gap:8px;}
   .stat-card{padding:12px 10px;}
   .stat-num{font-size:22px;}
+  .subject-grid{grid-template-columns:1fr;}
   .scope{padding:20px 16px;min-height:300px;}
   .scope-question{font-size:16.5px;}
   .rate-row{gap:6px;}
@@ -158,12 +173,16 @@ h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px
       <span class="brand-mark">CH1&nbsp;500mV</span>
       <span class="brand-name">Oscillo</span>
     </div>
-    <span class="readout" id="clock-readout">200,0µs</span>
+    <span class="readout" id="clock-readout"></span>
   </div>
 
-  <div id="screen-home">
-    <h1>Révisions — Signaux physiques</h1>
-    <p class="subtitle">Définitions, formules et méthodes de tes TD, avec répétition espacée : les cartes que tu maîtrises reviennent moins souvent, celles qui coincent reviennent plus vite.</p>
+  <div id="screen-loading">
+    <p class="subtitle">Chargement des cours…</p>
+  </div>
+
+  <div id="screen-home" class="hidden">
+    <h1>Révisions</h1>
+    <p class="subtitle">Choisis une matière, révise tes définitions, formules et méthodes. La répétition espacée fait remonter ce qui coince plus souvent.</p>
 
     <div class="stats-row">
       <div class="stat-card">
@@ -185,12 +204,28 @@ h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px
       <span class="sub" id="review-all-sub"></span>
     </button>
 
-    <div class="section-label">Chapitres</div>
-    <div class="chapter-list" id="chapter-list"></div>
+    <div class="section-label">Matières</div>
+    <div class="subject-grid" id="subject-grid"></div>
 
     <div class="footer-note">
       Progression enregistrée localement dans ce navigateur.<br>
       <button class="reset-link" id="btn-reset">Réinitialiser toute la progression</button>
+    </div>
+  </div>
+
+  <div id="screen-subject" class="hidden">
+    <div class="subject-header">
+      <button class="back-btn" id="btn-subject-back">← Matières</button>
+      <h1 id="subject-title"></h1>
+    </div>
+    <button class="review-cta" id="btn-review-subject">
+      <span id="review-subject-label">Réviser cette matière</span>
+    </button>
+    <div class="section-label">Chapitres</div>
+    <div class="chapter-list" id="chapter-list"></div>
+    <div class="empty-state hidden" id="subject-empty">
+      Aucun cours pour l'instant dans cette matière.<br>
+      Envoie tes PDF de cours dans le chat pour que je les ajoute ici.
     </div>
   </div>
 
@@ -234,60 +269,34 @@ h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px
 
 </div>
 
+<script src="manifest.js"></script>
 <script>
-var CHAPTERS = [
-  {
-    id: "s1",
-    code: "S1",
-    name: "Propagation de signaux physiques",
-    cards: [
-      {id:"s1-def-signal", type:"def", q:"Qu'est-ce qu'un signal physique ?", a:"Une grandeur physique qui dépend du temps. Exemples : signaux mécaniques, électriques, électromagnétiques, quantiques, thermiques."},
-      {id:"s1-def-periodique", type:"def", q:"Définition d'un signal périodique", a:"Les variations de son amplitude se reproduisent régulièrement au bout d'une période $T$ constante, appelée période."},
-      {id:"s1-def-sinusoidal", type:"formule", q:"Écrire un signal sinusoïdal $s(t)$ et les relations pulsation / fréquence / période", a:"$$s(t) = A\\cos(\\omega t + \\varphi)$$ avec $\\omega = \\dfrac{2\\pi}{T} = 2\\pi f$ et $f = \\dfrac{1}{T} = \\dfrac{\\omega}{2\\pi}$"},
-      {id:"s1-formule-battements", type:"formule", q:"Formule de la période de battement $T_{batt}$ entre deux signaux de fréquences $f_1$ et $f_2$ proches", a:"$$T_{batt} = \\left|\\dfrac{1}{f_1-f_2}\\right|$$"},
-      {id:"s1-methode-battements", type:"méthode", q:"Superposition de deux signaux sinusoïdaux de fréquences proches : les 4 étapes de la méthode ?", a:"1. Sommer $s = s_1 + s_2$.<br>2. Utiliser $\\cos p+\\cos q = 2\\cos\\frac{p+q}{2}\\cos\\frac{p-q}{2}$.<br>3. Identifier le terme rapide (fréquence $\\frac{f_1+f_2}{2}$) et le terme lent = enveloppe (fréquence $\\left|\\frac{f_1-f_2}{2}\\right|$).<br>4. La période de l'enveloppe = demi-période du terme lent."},
-      {id:"s1-def-onde", type:"def", q:"Définition d'une onde", a:"Phénomène de propagation de proche en proche d'une perturbation (vibration ou grandeur vibrante), sans transport de matière."},
-      {id:"s1-def-onde-1d", type:"def", q:"Onde unidimensionnelle : définition et notation", a:"Propagation dans une seule direction de l'espace ; la grandeur vibrante s'écrit $s(x,t)$."},
-      {id:"s1-formule-onde-prog", type:"formule", q:"Onde progressive unidimensionnelle à célérité $c$ : formes possibles de $s(x,t)$ ?", a:"Sens $+\\vec{u}_x$ : $s(x,t) = f\\left(t-\\dfrac{x}{c}\\right) = F(x-ct)$<br>Sens $-\\vec{u}_x$ : $s(x,t) = g\\left(t+\\dfrac{x}{c}\\right) = G(x+ct)$"},
-      {id:"s1-formule-onde-sin", type:"formule", q:"Onde progressive sinusoïdale : expression et vecteur d'onde $k$", a:"$$s(x,t) = A\\cos(\\omega t \\pm kx + \\varphi)$$ avec $k = \\dfrac{\\omega}{c}$, le vecteur d'onde (ou pulsation spatiale)"},
-      {id:"s1-table-periode", type:"formule", q:"Relations période / fréquence / pulsation : temporelles vs spatiales ?", a:"Temporelle : $T=\\lambda/c$, $f=1/T$, $\\omega=2\\pi f$<br>Spatiale : $\\lambda=cT$, $\\sigma=1/\\lambda$, $k=2\\pi/\\lambda$"},
-      {id:"s1-def-milieu-dispersif", type:"def", q:"Définition d'un milieu dispersif", a:"Milieu dans lequel la vitesse de propagation d'une onde progressive sinusoïdale dépend de sa fréquence."}
-    ]
-  },
-  {
-    id: "s2",
-    code: "S2",
-    name: "Phénomène d'interférences",
-    cards: [
-      {id:"s2-formule-somme", type:"formule", q:"Amplitude résultante $A$ de la superposition de deux signaux sinusoïdaux de même fréquence (amplitudes $A_1,A_2$, phases $\\varphi_1,\\varphi_2$)", a:"$$A = \\sqrt{A_1^2+A_2^2+2A_1A_2\\cos(\\varphi_2-\\varphi_1)}$$"},
-      {id:"s2-def-constructives", type:"def", q:"Condition d'interférences constructives (déphasage et différence de marche)", a:"$\\Delta\\varphi = 2k\\pi$, $k\\in\\mathbb{Z}$, soit $\\delta = p\\lambda$, $p\\in\\mathbb{Z}$"},
-      {id:"s2-def-destructives", type:"def", q:"Condition d'interférences destructives", a:"$\\Delta\\varphi = (2k+1)\\pi$, soit $\\delta = (2p+1)\\dfrac{\\lambda}{2}$"},
-      {id:"s2-def-diff-marche", type:"def", q:"Définition de la différence de marche $\\delta$ et sa relation avec le déphasage", a:"Différence des distances parcourues par les deux ondes depuis leur source jusqu'au point d'interférence.<br>$$\\Delta\\varphi = k\\delta = \\dfrac{2\\pi}{\\lambda}\\delta$$"},
-      {id:"s2-def-chemin-optique", type:"def", q:"Définition du chemin optique entre $S$ et $M$", a:"Dans un milieu homogène et isotrope d'indice $n$ : $$(SM) = n\\,SM$$"},
-      {id:"s2-formule-fresnel", type:"formule", q:"Formule de Fresnel : intensité résultant de l'interférence de deux ondes $I_1,I_2$", a:"$$I = I_1+I_2+2\\sqrt{I_1I_2}\\cos(\\Delta\\varphi) = I_1+I_2+2\\sqrt{I_1I_2}\\cos\\left(\\dfrac{2\\pi\\delta}{\\lambda}\\right)$$"},
-      {id:"s2-formule-interfrange", type:"formule", q:"Formule de l'interfrange $i$ (trous d'Young, distance $a$, écran à distance $D$)", a:"$$i = \\dfrac{\\lambda D}{a}$$"},
-      {id:"s2-methode-interferences", type:"méthode", q:"Méthode générale pour résoudre un exercice d'interférences : les 5 étapes ?", a:"1. Faire un schéma.<br>2. Identifier les deux ondes, écrire leur phase.<br>3. Exprimer la différence de marche en un point donné.<br>4. Appliquer les conditions constructives / destructives.<br>5. Répondre aux questions posées."}
-    ]
-  },
-  {
-    id: "s3",
-    code: "S3",
-    name: "Ondes stationnaires mécaniques",
-    cards: [
-      {id:"s3-def-onde-stat", type:"def", q:"Définition d'une onde stationnaire", a:"Onde dont les variables d'espace et de temps sont découplées : $s(x,t) = f(x)g(t)$. Elle ne se propage pas, elle vibre sur place."},
-      {id:"s3-formule-onde-stat-sin", type:"formule", q:"Forme générale d'une onde stationnaire sinusoïdale", a:"$$s(x,t) = A\\cos(\\omega t+\\varphi)\\sin(kx+\\psi)$$"},
-      {id:"s3-def-noeud", type:"def", q:"Définition d'un nœud de vibration + espacement entre deux nœuds consécutifs", a:"Point où l'amplitude de l'onde stationnaire est nulle. Deux nœuds consécutifs sont espacés de $\\dfrac{\\lambda}{2}$."},
-      {id:"s3-def-ventre", type:"def", q:"Définition d'un ventre de vibration + espacement entre deux ventres consécutifs", a:"Point où l'amplitude est maximale. Deux ventres consécutifs sont espacés de $\\dfrac{\\lambda}{2}$."},
-      {id:"s3-def-noeud-ventre", type:"def", q:"Distance entre un nœud et le ventre le plus proche", a:"$$\\dfrac{\\lambda}{4}$$"},
-      {id:"s3-def-modes-propres", type:"def", q:"Modes propres d'une corde fixée aux deux extrémités : principe ?", a:"Les pulsations temporelle et spatiale sont quantifiées. Chaque pulsation $\\omega_n$ ($n\\in\\mathbb{N}^*$) définit un mode de vibration sélectionné par le dispositif : c'est la résonance."},
-      {id:"s3-formule-melde", type:"formule", q:"Célérité des ondes sur une corde de Melde (tension $T$, masse linéique $\\mu$)", a:"$$c = \\sqrt{\\dfrac{T}{\\mu}}$$"},
-      {id:"s3-methode-modes", type:"méthode", q:"Méthode pour retrouver les fréquences des modes propres d'une corde fixée : les étapes ?", a:"1. Repérer les nœuds imposés par les points d'attache.<br>2. Relier $\\lambda_n$ à la longueur $L$ pour chaque mode.<br>3. En déduire $f_n$ à partir de $\\lambda_n$ et $c$.<br>4. La fréquence fondamentale est $f_1$ ($n=1$)."},
-      {id:"s3-def-cl-acoustique", type:"def", q:"Conditions aux limites acoustiques : extrémité fermée / ouverte d'un tuyau ?", a:"Extrémité fermée = ventre de vibration (de surpression).<br>Extrémité ouverte = nœud de vibration (surpression nulle)."}
-    ]
-  }
-];
+/* ============================================================
+   MOTEUR — ne devrait jamais avoir besoin d'être modifié.
+   Les cours sont chargés dynamiquement depuis manifest.js
+   ============================================================ */
 
-var STORAGE_KEY = "oscillo-srs-v1";
+function loadScript(src){
+  return new Promise(function(resolve){
+    var el = document.createElement("script");
+    el.src = src;
+    el.onload = function(){ resolve(true); };
+    el.onerror = function(){ console.warn("Impossible de charger " + src); resolve(false); };
+    document.head.appendChild(el);
+  });
+}
+
+var SUBJECTS = window.OSCILLO_SUBJECTS || [];
+var MANIFEST = window.OSCILLO_MANIFEST || [];
+
+Promise.all(MANIFEST.map(loadScript)).then(function(){
+  document.getElementById("screen-loading").classList.add("hidden");
+  initApp();
+});
+
+var COURSES = []; // filled after load: {subject,id,name,cards[]}
+
+var STORAGE_KEY = "oscillo-srs-v2";
 var memoryStore = {};
 var useMemoryFallback = false;
 
@@ -312,15 +321,19 @@ function saveState(state){
 
 var srsState = loadState();
 
-function getCardState(id){
-  if(!srsState[id]){
-    srsState[id] = {ef: 2.5, interval: 0, repetition: 0, due: 0, seen: false};
-  }
-  return srsState[id];
+function globalCardId(subjectId, courseId, cardLocalId){
+  return subjectId + "|" + courseId + "|" + cardLocalId;
 }
 
-function applySM2(cardId, quality){
-  var s = getCardState(cardId);
+function getCardState(gid){
+  if(!srsState[gid]){
+    srsState[gid] = {ef: 2.5, interval: 0, repetition: 0, due: 0, seen: false};
+  }
+  return srsState[gid];
+}
+
+function applySM2(gid, quality){
+  var s = getCardState(gid);
   s.seen = true;
   if(quality < 3){
     s.repetition = 0;
@@ -333,99 +346,156 @@ function applySM2(cardId, quality){
     s.ef = s.ef + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
     if(s.ef < 1.3) s.ef = 1.3;
   }
-  var now = Date.now();
-  s.due = now + s.interval * 24 * 60 * 60 * 1000;
-  srsState[cardId] = s;
+  s.due = Date.now() + s.interval * 24 * 60 * 60 * 1000;
+  srsState[gid] = s;
   saveState(srsState);
 }
 
-function allCards(){
+function isDue(gid){
+  var s = getCardState(gid);
+  return !s.seen || s.due <= Date.now();
+}
+function isMastered(gid){
+  var s = getCardState(gid);
+  return s.seen && s.interval >= 21;
+}
+
+function flatCards(filterFn){
   var out = [];
-  CHAPTERS.forEach(function(ch){
-    ch.cards.forEach(function(c){ out.push(Object.assign({}, c, {chapterCode: ch.code, chapterId: ch.id})); });
+  COURSES.forEach(function(course){
+    if(filterFn && !filterFn(course)) return;
+    course.cards.forEach(function(c){
+      out.push({
+        gid: globalCardId(course.subject, course.id, c.id),
+        type: c.type, q: c.q, a: c.a,
+        courseName: course.name,
+        courseCode: course.id.toUpperCase(),
+        subjectId: course.subject
+      });
+    });
   });
   return out;
 }
 
-function isDue(cardId){
-  var s = getCardState(cardId);
-  return !s.seen || s.due <= Date.now();
+function subjectName(id){
+  var s = SUBJECTS.find(function(x){ return x.id === id; });
+  return s ? s.name : id;
+}
+function subjectCode(id){
+  var s = SUBJECTS.find(function(x){ return x.id === id; });
+  return s ? s.code : "??";
 }
 
-function isMastered(cardId){
-  var s = getCardState(cardId);
-  return s.seen && s.interval >= 21;
-}
+var currentSubject = null;
+var session = null;
 
-function dueCardsFor(chapterId){
-  var cards = chapterId ? (CHAPTERS.find(function(c){return c.id===chapterId;}).cards) : allCards();
-  return cards.filter(function(c){ return isDue(c.id); });
+function initApp(){
+  COURSES = window.OSCILLO_COURSES || [];
+  showScreen("home");
+  var d = new Date();
+  document.getElementById("clock-readout").textContent =
+    d.toLocaleDateString("fr-FR", {day:"2-digit", month:"2-digit", year:"numeric"});
 }
 
 function renderHome(){
-  var all = allCards();
-  var due = all.filter(function(c){ return isDue(c.id); });
-  var mastered = all.filter(function(c){ return isMastered(c.id); });
+  var all = flatCards();
+  var due = all.filter(function(c){ return isDue(c.gid); });
+  var mastered = all.filter(function(c){ return isMastered(c.gid); });
 
   document.getElementById("stat-due").textContent = due.length;
   document.getElementById("stat-mastered").textContent = mastered.length;
   document.getElementById("stat-total").textContent = all.length;
 
-  var btn = document.getElementById("btn-review-all");
   var label = document.getElementById("review-all-label");
   var sub = document.getElementById("review-all-sub");
-  if(due.length > 0){
+  var btn = document.getElementById("btn-review-all");
+  if(all.length === 0){
+    btn.disabled = true;
+    label.textContent = "Aucun cours pour l'instant";
+    sub.textContent = "";
+  } else if(due.length > 0){
     btn.disabled = false;
     label.textContent = "Réviser maintenant (" + due.length + ")";
     sub.textContent = "";
   } else {
     btn.disabled = false;
     label.textContent = "Aucune carte due — réviser en avance";
-    sub.textContent = "Revoir les cartes déjà planifiées, sans attendre.";
+    sub.textContent = "";
   }
 
-  var list = document.getElementById("chapter-list");
-  list.innerHTML = "";
-  CHAPTERS.forEach(function(ch){
-    var chDue = ch.cards.filter(function(c){ return isDue(c.id); }).length;
-    var chMastered = ch.cards.filter(function(c){ return isMastered(c.id); }).length;
-    var pct = Math.round((chMastered / ch.cards.length) * 100);
-
-    var row = document.createElement("div");
-    row.className = "chapter-row";
-    row.innerHTML =
-      '<span class="ch-code">' + ch.code + '</span>' +
-      '<div class="ch-info">' +
-        '<div class="ch-name">' + ch.name + '</div>' +
-        '<div class="ch-bar-track"><div class="ch-bar-fill" style="width:' + pct + '%"></div></div>' +
-        '<div class="ch-meta"><span>' + ch.cards.length + ' cartes</span>' +
-        (chDue > 0 ? '<span class="due">' + chDue + ' à réviser</span>' : '<span>à jour</span>') +
-        '<span>' + pct + '% maîtrisé</span></div>' +
-      '</div>' +
-      '<span class="ch-arrow">→</span>';
-    row.addEventListener("click", function(){ startSession(ch.id); });
-    list.appendChild(row);
+  var grid = document.getElementById("subject-grid");
+  grid.innerHTML = "";
+  SUBJECTS.forEach(function(subj){
+    var subjCards = flatCards(function(c){ return c.subject === subj.id; });
+    var subjDue = subjCards.filter(function(c){ return isDue(c.gid); }).length;
+    var card = document.createElement("div");
+    card.className = "subject-card" + (subjCards.length === 0 ? " empty" : "");
+    card.innerHTML =
+      '<span class="subj-code">' + subj.code + '</span>' +
+      '<div class="subj-name">' + subj.name + '</div>' +
+      '<div class="subj-meta' + (subjDue > 0 ? ' due' : '') + '">' +
+      (subjCards.length === 0 ? 'aucun cours' : subjCards.length + ' cartes' + (subjDue > 0 ? ' · ' + subjDue + ' à réviser' : '')) +
+      '</div>';
+    card.addEventListener("click", function(){ openSubject(subj.id); });
+    grid.appendChild(card);
   });
 }
 
-var session = null;
+function openSubject(subjectId){
+  currentSubject = subjectId;
+  document.getElementById("subject-title").textContent = subjectName(subjectId);
 
-function startSession(chapterId){
-  var due = dueCardsFor(chapterId);
-  if(due.length === 0){
-    var pool = chapterId ? CHAPTERS.find(function(c){return c.id===chapterId;}).cards.map(function(c){
-      var ch = CHAPTERS.find(function(x){return x.id===chapterId;});
-      return Object.assign({}, c, {chapterCode: ch.code, chapterId: ch.id});
-    }) : allCards();
-    due = pool;
+  var courses = COURSES.filter(function(c){ return c.subject === subjectId; });
+  var list = document.getElementById("chapter-list");
+  var emptyState = document.getElementById("subject-empty");
+  var reviewBtn = document.getElementById("btn-review-subject");
+  var reviewLabel = document.getElementById("review-subject-label");
+
+  if(courses.length === 0){
+    list.innerHTML = "";
+    emptyState.classList.remove("hidden");
+    reviewBtn.classList.add("hidden");
+  } else {
+    emptyState.classList.add("hidden");
+    reviewBtn.classList.remove("hidden");
+    var subjCards = flatCards(function(c){ return c.subject === subjectId; });
+    var subjDue = subjCards.filter(function(c){ return isDue(c.gid); }).length;
+    reviewLabel.textContent = subjDue > 0 ? "Réviser cette matière (" + subjDue + ")" : "Réviser en avance";
+
+    list.innerHTML = "";
+    courses.forEach(function(course){
+      var cCards = flatCards(function(c){ return c.subject === subjectId && c.id === course.id; });
+      var cDue = cCards.filter(function(c){ return isDue(c.gid); }).length;
+      var cMastered = cCards.filter(function(c){ return isMastered(c.gid); }).length;
+      var pct = Math.round((cMastered / course.cards.length) * 100);
+
+      var row = document.createElement("div");
+      row.className = "chapter-row";
+      row.innerHTML =
+        '<span class="ch-code">' + course.id.toUpperCase() + '</span>' +
+        '<div class="ch-info">' +
+          '<div class="ch-name">' + course.name + '</div>' +
+          '<div class="ch-bar-track"><div class="ch-bar-fill" style="width:' + pct + '%"></div></div>' +
+          '<div class="ch-meta"><span>' + course.cards.length + ' cartes</span>' +
+          (cDue > 0 ? '<span class="due">' + cDue + ' à réviser</span>' : '<span>à jour</span>') +
+          '<span>' + pct + '% maîtrisé</span></div>' +
+        '</div>' +
+        '<span class="ch-arrow">→</span>';
+      row.addEventListener("click", function(){ startSession(function(c){ return c.subject === subjectId && c.id === course.id; }); });
+      list.appendChild(row);
+    });
   }
+
+  reviewBtn.onclick = function(){ startSession(function(c){ return c.subject === subjectId; }); };
+  showScreen("subject");
+}
+
+function startSession(filterFn){
+  var pool = flatCards(filterFn);
+  var due = pool.filter(function(c){ return isDue(c.gid); });
+  if(due.length === 0) due = pool;
   shuffle(due);
-  session = {
-    queue: due,
-    index: 0,
-    revealed: false,
-    stats: {hard:0, good:0, easy:0}
-  };
+  session = { queue: due, index: 0, revealed: false, stats: {hard:0, good:0, easy:0} };
   showScreen("session");
   renderCard();
 }
@@ -439,14 +509,11 @@ function shuffle(arr){
 
 function renderCard(){
   if(!session) return;
-  if(session.index >= session.queue.length){
-    finishSession();
-    return;
-  }
+  if(session.index >= session.queue.length){ finishSession(); return; }
   var card = session.queue[session.index];
   session.revealed = false;
 
-  document.getElementById("scope-chapter").textContent = card.chapterCode;
+  document.getElementById("scope-chapter").textContent = subjectCode(card.subjectId) + " · " + card.courseCode;
   document.getElementById("scope-type").textContent = card.type;
   var content = document.getElementById("scope-content");
   content.className = "scope-question";
@@ -454,7 +521,7 @@ function renderCard(){
   document.getElementById("scope-hint").textContent = "clique la carte ou appuie sur espace pour révéler";
   document.getElementById("rate-row").classList.add("hidden");
 
-  document.getElementById("session-progress-count").textContent = (session.index) + "/" + session.queue.length;
+  document.getElementById("session-progress-count").textContent = session.index + "/" + session.queue.length;
   document.getElementById("session-progress-fill").style.width = (session.index / session.queue.length * 100) + "%";
 
   renderMath(content);
@@ -477,7 +544,7 @@ function revealCard(){
 function rateCard(quality){
   if(!session || !session.revealed) return;
   var card = session.queue[session.index];
-  applySM2(card.id, quality);
+  applySM2(card.gid, quality);
   if(quality <= 2) session.stats.hard++;
   else if(quality <= 4) session.stats.good++;
   else session.stats.easy++;
@@ -507,15 +574,16 @@ function renderMath(el){
 }
 
 function showScreen(name){
-  ["home","session","summary"].forEach(function(s){
+  ["home","subject","session","summary"].forEach(function(s){
     document.getElementById("screen-" + s).classList.toggle("hidden", s !== name);
   });
   if(name === "home") renderHome();
 }
 
 document.getElementById("btn-review-all").addEventListener("click", function(){ startSession(null); });
-document.getElementById("btn-quit").addEventListener("click", function(){ session = null; showScreen("home"); });
-document.getElementById("btn-summary-home").addEventListener("click", function(){ showScreen("home"); });
+document.getElementById("btn-subject-back").addEventListener("click", function(){ showScreen("home"); });
+document.getElementById("btn-quit").addEventListener("click", function(){ session = null; showScreen(currentSubject ? "subject" : "home"); });
+document.getElementById("btn-summary-home").addEventListener("click", function(){ currentSubject = null; showScreen("home"); });
 document.getElementById("scope-card").addEventListener("click", revealCard);
 document.getElementById("rate-row").addEventListener("click", function(e){
   var btn = e.target.closest(".rate-btn");
@@ -538,12 +606,6 @@ document.addEventListener("keydown", function(e){
     if(e.key === "3") rateCard(5);
   }
 });
-
-var d = new Date();
-document.getElementById("clock-readout").textContent =
-  d.toLocaleDateString("fr-FR", {day:"2-digit", month:"2-digit", year:"numeric"});
-
-renderHome();
 </script>
 </body>
 </html>
