@@ -47,7 +47,10 @@ body{
 .brand{display:flex;align-items:baseline;gap:10px;}
 .brand-mark{font-family:var(--font-mono);font-size:11px;letter-spacing:0.12em;color:var(--phosphor-dim);border:1px solid var(--border-strong);padding:3px 7px;border-radius:3px;}
 .brand-name{font-family:var(--font-display);font-size:22px;font-weight:500;color:var(--phosphor-bright);letter-spacing:0.01em;}
-.readout{font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);letter-spacing:0.04em;}
+.readout{font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);letter-spacing:0.04em;text-align:right;}
+.sync-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px;background:var(--ink-faint);}
+.sync-dot.on{background:var(--phosphor);}
+.sync-dot.off{background:var(--amber);}
 
 h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px;color:var(--ink);}
 .subtitle{color:var(--ink-dim);font-size:14.5px;line-height:1.6;margin:0 0 32px;max-width:56ch;}
@@ -93,7 +96,7 @@ h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px
 .empty-state b{color:var(--ink);}
 
 .footer-note{text-align:center;font-family:var(--font-mono);font-size:10.5px;color:var(--ink-faint);margin-top:40px;line-height:1.8;}
-.reset-link{color:var(--ink-faint);text-decoration:underline;cursor:pointer;background:none;border:none;font-family:var(--font-mono);font-size:10.5px;padding:0;}
+.reset-link{color:var(--ink-faint);text-decoration:underline;cursor:pointer;background:none;border:none;font-family:var(--font-mono);font-size:10.5px;padding:0;margin:0 6px;}
 .reset-link:hover{color:var(--danger);}
 
 .hidden{display:none !important;}
@@ -153,6 +156,22 @@ h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px
 .summary-stats{display:flex;justify-content:center;gap:28px;margin-bottom:34px;font-family:var(--font-mono);font-size:12px;color:var(--ink-dim);}
 .summary-stats b{color:var(--ink);}
 
+.auth-box{max-width:380px;margin:60px auto 0;}
+.auth-box h1{text-align:center;font-size:24px;}
+.auth-box .subtitle{text-align:center;margin-left:auto;margin-right:auto;}
+.field-label{font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);letter-spacing:0.05em;text-transform:uppercase;display:block;margin:16px 0 6px;}
+.field-input{width:100%;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;padding:12px 14px;color:var(--ink);font-family:var(--font-body);font-size:14px;}
+.field-input:focus{outline:none;border-color:var(--border-strong);}
+.auth-error{color:var(--danger);font-family:var(--font-mono);font-size:12px;margin-top:14px;min-height:16px;}
+.auth-notice{color:var(--phosphor);font-family:var(--font-mono);font-size:12px;margin-top:14px;min-height:16px;}
+.auth-actions{display:flex;gap:10px;margin-top:22px;}
+.auth-btn-primary{flex:1;background:var(--phosphor);color:#052018;font-family:var(--font-mono);font-weight:700;font-size:13px;text-transform:uppercase;border:none;border-radius:6px;padding:13px;cursor:pointer;}
+.auth-btn-primary:hover{background:var(--phosphor-bright);}
+.auth-btn-secondary{flex:1;background:transparent;color:var(--ink-dim);font-family:var(--font-mono);font-size:13px;border:1px solid var(--border);border-radius:6px;padding:13px;cursor:pointer;}
+.auth-btn-secondary:hover{border-color:var(--border-strong);color:var(--ink);}
+.auth-skip{display:block;text-align:center;margin-top:24px;color:var(--ink-faint);font-family:var(--font-mono);font-size:11.5px;text-decoration:underline;cursor:pointer;background:none;border:none;}
+.auth-skip:hover{color:var(--ink);}
+
 @media(max-width:520px){
   .stats-row{grid-template-columns:1fr 1fr 1fr;gap:8px;}
   .stat-card{padding:12px 10px;}
@@ -177,7 +196,25 @@ h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px
   </div>
 
   <div id="screen-loading">
-    <p class="subtitle">Chargement des cours…</p>
+    <p class="subtitle">Chargement…</p>
+  </div>
+
+  <div id="screen-auth" class="hidden">
+    <div class="auth-box">
+      <h1>Connexion</h1>
+      <p class="subtitle">Connecte-toi pour retrouver ta progression sur tous tes appareils.</p>
+      <label class="field-label">Email</label>
+      <input class="field-input" type="email" id="auth-email" placeholder="prenom@exemple.com" autocomplete="email">
+      <label class="field-label">Mot de passe</label>
+      <input class="field-input" type="password" id="auth-password" placeholder="6 caractères minimum" autocomplete="current-password">
+      <div class="auth-error" id="auth-error"></div>
+      <div class="auth-notice" id="auth-notice"></div>
+      <div class="auth-actions">
+        <button class="auth-btn-secondary" id="btn-signup">Créer un compte</button>
+        <button class="auth-btn-primary" id="btn-signin">Se connecter</button>
+      </div>
+      <button class="auth-skip" id="btn-skip-auth">Continuer sans compte (cet appareil seulement)</button>
+    </div>
   </div>
 
   <div id="screen-home" class="hidden">
@@ -207,10 +244,7 @@ h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px
     <div class="section-label">Matières</div>
     <div class="subject-grid" id="subject-grid"></div>
 
-    <div class="footer-note">
-      Progression enregistrée localement dans ce navigateur.<br>
-      <button class="reset-link" id="btn-reset">Réinitialiser toute la progression</button>
-    </div>
+    <div class="footer-note" id="footer-note"></div>
   </div>
 
   <div id="screen-subject" class="hidden">
@@ -270,10 +304,13 @@ h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px
 </div>
 
 <script src="manifest.js"></script>
+<script src="supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 /* ============================================================
    MOTEUR — ne devrait jamais avoir besoin d'être modifié.
-   Les cours sont chargés dynamiquement depuis manifest.js
+   Les cours sont chargés dynamiquement depuis manifest.js.
+   La synchro cloud utilise supabase-config.js (optionnel).
    ============================================================ */
 
 function loadScript(src){
@@ -288,19 +325,25 @@ function loadScript(src){
 
 var SUBJECTS = window.OSCILLO_SUBJECTS || [];
 var MANIFEST = window.OSCILLO_MANIFEST || [];
-
-Promise.all(MANIFEST.map(loadScript)).then(function(){
-  document.getElementById("screen-loading").classList.add("hidden");
-  initApp();
-});
-
-var COURSES = []; // filled after load: {subject,id,name,cards[]}
+var COURSES = [];
 
 var STORAGE_KEY = "oscillo-srs-v2";
 var memoryStore = {};
 var useMemoryFallback = false;
+var srsState = {};
 
-function loadState(){
+var cloudEnabled = false;
+var sb = null;
+var currentUser = null;
+
+function supabaseConfigLooksReal(cfg){
+  if(!cfg) return false;
+  return cfg.url && cfg.anonKey &&
+    cfg.url.indexOf("COLLE_TA_VALEUR") !== 0 &&
+    cfg.anonKey.indexOf("COLLE_TA_VALEUR") !== 0;
+}
+
+function loadLocalState(){
   try{
     var raw = window.localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : {};
@@ -309,7 +352,7 @@ function loadState(){
     return memoryStore;
   }
 }
-function saveState(state){
+function saveLocalState(state){
   try{
     if(useMemoryFallback){ memoryStore = state; return; }
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -319,19 +362,47 @@ function saveState(state){
   }
 }
 
-var srsState = loadState();
+function saveState(state){
+  saveLocalState(state);
+  syncToCloud(state);
+}
+
+var syncTimer = null;
+function syncToCloud(state){
+  if(!cloudEnabled || !currentUser) return;
+  setSyncDot("off");
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(function(){
+    sb.from("progress").upsert({
+      user_id: currentUser.id,
+      data: JSON.stringify(state),
+      updated_at: new Date().toISOString()
+    }).then(function(res){
+      if(res.error){ console.warn("Sync cloud échouée :", res.error.message); setSyncDot("off"); }
+      else { setSyncDot("on"); }
+    });
+  }, 500);
+}
+
+function setSyncDot(status){
+  var el = document.getElementById("clock-readout");
+  if(!el) return;
+  var dot = status === "on" ? '<span class="sync-dot on"></span>synchronisé'
+    : status === "off" ? '<span class="sync-dot off"></span>hors ligne'
+    : '';
+  var dateStr = new Date().toLocaleDateString("fr-FR", {day:"2-digit", month:"2-digit", year:"numeric"});
+  el.innerHTML = (cloudEnabled && currentUser ? dot + " · " : "") + dateStr;
+}
 
 function globalCardId(subjectId, courseId, cardLocalId){
   return subjectId + "|" + courseId + "|" + cardLocalId;
 }
-
 function getCardState(gid){
   if(!srsState[gid]){
     srsState[gid] = {ef: 2.5, interval: 0, repetition: 0, due: 0, seen: false};
   }
   return srsState[gid];
 }
-
 function applySM2(gid, quality){
   var s = getCardState(gid);
   s.seen = true;
@@ -350,7 +421,6 @@ function applySM2(gid, quality){
   srsState[gid] = s;
   saveState(srsState);
 }
-
 function isDue(gid){
   var s = getCardState(gid);
   return !s.seen || s.due <= Date.now();
@@ -359,7 +429,6 @@ function isMastered(gid){
   var s = getCardState(gid);
   return s.seen && s.interval >= 21;
 }
-
 function flatCards(filterFn){
   var out = [];
   COURSES.forEach(function(course){
@@ -376,28 +445,118 @@ function flatCards(filterFn){
   });
   return out;
 }
-
-function subjectName(id){
-  var s = SUBJECTS.find(function(x){ return x.id === id; });
-  return s ? s.name : id;
-}
-function subjectCode(id){
-  var s = SUBJECTS.find(function(x){ return x.id === id; });
-  return s ? s.code : "??";
-}
+function subjectName(id){ var s = SUBJECTS.find(function(x){ return x.id === id; }); return s ? s.name : id; }
+function subjectCode(id){ var s = SUBJECTS.find(function(x){ return x.id === id; }); return s ? s.code : "??"; }
 
 var currentSubject = null;
 var session = null;
 
-function initApp(){
+Promise.all(MANIFEST.map(loadScript)).then(function(){
   COURSES = window.OSCILLO_COURSES || [];
-  showScreen("home");
-  var d = new Date();
-  document.getElementById("clock-readout").textContent =
-    d.toLocaleDateString("fr-FR", {day:"2-digit", month:"2-digit", year:"numeric"});
+  cloudEnabled = supabaseConfigLooksReal(window.OSCILLO_SUPABASE_CONFIG) && !!window.supabase;
+
+  if(!cloudEnabled){
+    srsState = loadLocalState();
+    document.getElementById("screen-loading").classList.add("hidden");
+    showScreen("home");
+    return;
+  }
+
+  sb = window.supabase.createClient(window.OSCILLO_SUPABASE_CONFIG.url, window.OSCILLO_SUPABASE_CONFIG.anonKey);
+
+  sb.auth.onAuthStateChange(function(event, session){
+    document.getElementById("screen-loading").classList.add("hidden");
+    if(session && session.user){
+      currentUser = session.user;
+      sb.from("progress").select("data").eq("user_id", currentUser.id).maybeSingle().then(function(res){
+        if(res.data && res.data.data){
+          srsState = JSON.parse(res.data.data);
+        } else {
+          srsState = loadLocalState();
+          syncToCloud(srsState);
+        }
+        saveLocalState(srsState);
+        showScreen("home");
+        setSyncDot("on");
+      }).catch(function(){
+        srsState = loadLocalState();
+        showScreen("home");
+        setSyncDot("off");
+      });
+    } else {
+      currentUser = null;
+      srsState = loadLocalState();
+      if(document.getElementById("screen-home").classList.contains("hidden") === false || !document.getElementById("screen-auth")){
+        // no-op, guard
+      }
+      showScreen("auth");
+    }
+  });
+
+  sb.auth.getSession().then(function(res){
+    if(!res.data.session){
+      document.getElementById("screen-loading").classList.add("hidden");
+      showScreen("auth");
+    }
+  });
+});
+
+function initAuthActions(){
+  document.getElementById("btn-signin").addEventListener("click", function(){
+    var email = document.getElementById("auth-email").value.trim();
+    var pass = document.getElementById("auth-password").value;
+    setAuthError(""); setAuthNotice("");
+    sb.auth.signInWithPassword({ email: email, password: pass }).then(function(res){
+      if(res.error) setAuthError(translateAuthError(res.error));
+    });
+  });
+  document.getElementById("btn-signup").addEventListener("click", function(){
+    var email = document.getElementById("auth-email").value.trim();
+    var pass = document.getElementById("auth-password").value;
+    setAuthError(""); setAuthNotice("");
+    sb.auth.signUp({ email: email, password: pass }).then(function(res){
+      if(res.error){ setAuthError(translateAuthError(res.error)); return; }
+      if(res.data && res.data.session){
+        return;
+      }
+      setAuthNotice("Compte créé. Vérifie ta boîte mail pour confirmer, puis connecte-toi.");
+    });
+  });
+  document.getElementById("btn-skip-auth").addEventListener("click", function(){
+    cloudEnabled = false;
+    srsState = loadLocalState();
+    showScreen("home");
+  });
+}
+function setAuthError(msg){ document.getElementById("auth-error").textContent = msg; }
+function setAuthNotice(msg){ document.getElementById("auth-notice").textContent = msg; }
+function translateAuthError(err){
+  var msg = (err && err.message) || "";
+  if(msg.indexOf("Invalid login credentials") >= 0) return "Email ou mot de passe incorrect.";
+  if(msg.indexOf("User already registered") >= 0) return "Un compte existe déjà avec cet email. Connecte-toi.";
+  if(msg.indexOf("Password should be at least") >= 0) return "Mot de passe trop court (6 caractères minimum).";
+  if(msg.indexOf("Unable to validate email") >= 0 || msg.indexOf("invalid") >= 0) return "Adresse email invalide.";
+  if(msg.indexOf("Email not confirmed") >= 0) return "Confirme d'abord ton email (vérifie ta boîte mail).";
+  return msg || "Une erreur est survenue. Réessaie.";
 }
 
 function renderHome(){
+  var footer = document.getElementById("footer-note");
+  if(cloudEnabled && currentUser){
+    footer.innerHTML = 'Connecté : ' + currentUser.email + ' · <button class="reset-link" id="btn-signout">Se déconnecter</button> · <button class="reset-link" id="btn-reset">Réinitialiser</button>';
+  } else {
+    footer.innerHTML = 'Progression enregistrée localement dans ce navigateur.<br><button class="reset-link" id="btn-reset">Réinitialiser toute la progression</button>';
+  }
+  var signoutBtn = document.getElementById("btn-signout");
+  if(signoutBtn) signoutBtn.addEventListener("click", function(){ sb.auth.signOut(); });
+  document.getElementById("btn-reset").addEventListener("click", function(){
+    if(confirm("Réinitialiser toute la progression ? Cette action est irréversible.")){
+      srsState = {};
+      saveState(srsState);
+      renderHome();
+    }
+  });
+
   var all = flatCards();
   var due = all.filter(function(c){ return isDue(c.gid); });
   var mastered = all.filter(function(c){ return isMastered(c.gid); });
@@ -574,10 +733,14 @@ function renderMath(el){
 }
 
 function showScreen(name){
-  ["home","subject","session","summary"].forEach(function(s){
+  ["auth","home","subject","session","summary"].forEach(function(s){
     document.getElementById("screen-" + s).classList.toggle("hidden", s !== name);
   });
   if(name === "home") renderHome();
+  if(name === "auth"){
+    var dateStr = new Date().toLocaleDateString("fr-FR", {day:"2-digit", month:"2-digit", year:"numeric"});
+    document.getElementById("clock-readout").textContent = dateStr;
+  }
 }
 
 document.getElementById("btn-review-all").addEventListener("click", function(){ startSession(null); });
@@ -589,13 +752,6 @@ document.getElementById("rate-row").addEventListener("click", function(e){
   var btn = e.target.closest(".rate-btn");
   if(btn) rateCard(parseInt(btn.getAttribute("data-q"), 10));
 });
-document.getElementById("btn-reset").addEventListener("click", function(){
-  if(confirm("Réinitialiser toute la progression ? Cette action est irréversible.")){
-    srsState = {};
-    saveState(srsState);
-    renderHome();
-  }
-});
 document.addEventListener("keydown", function(e){
   var sessionVisible = !document.getElementById("screen-session").classList.contains("hidden");
   if(!sessionVisible) return;
@@ -606,6 +762,8 @@ document.addEventListener("keydown", function(e){
     if(e.key === "3") rateCard(5);
   }
 });
+
+initAuthActions();
 </script>
 </body>
 </html>
