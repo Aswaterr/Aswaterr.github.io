@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oscillo — Révisions physique des signaux</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0f0d;
+  --bg-panel:#0e1512;
+  --card-bg:#0f1613;
+  --grid-line:rgba(120,255,180,0.06);
+  --phosphor:#5be3a3;
+  --phosphor-bright:#9dffcf;
+  --phosphor-dim:#3a8f6e;
+  --amber:#ffb454;
+  --amber-dim:#b3803a;
+  --ink:#eaf6ef;
+  --ink-dim:#8fada0;
+  --ink-faint:#5c7469;
+  --danger:#ff7a6e;
+  --border:rgba(123,255,196,0.16);
+  --border-strong:rgba(123,255,196,0.32);
+  --font-display:'Newsreader', Georgia, serif;
+  --font-mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --font-body:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(ellipse at 20% -10%, rgba(91,227,163,0.05), transparent 60%),
+    repeating-linear-gradient(0deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+    repeating-linear-gradient(90deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+    var(--bg);
+  color:var(--ink);
+  font-family:var(--font-body);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:760px;margin:0 auto;padding:32px 20px 80px;}
+
+.topbar{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:36px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.brand{display:flex;align-items:baseline;gap:10px;}
+.brand-mark{font-family:var(--font-mono);font-size:11px;letter-spacing:0.12em;color:var(--phosphor-dim);border:1px solid var(--border-strong);padding:3px 7px;border-radius:3px;}
+.brand-name{font-family:var(--font-display);font-size:22px;font-weight:500;color:var(--phosphor-bright);letter-spacing:0.01em;}
+.readout{font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);letter-spacing:0.04em;}
+
+h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px;color:var(--ink);}
+.subtitle{color:var(--ink-dim);font-size:14.5px;line-height:1.6;margin:0 0 32px;max-width:56ch;}
+
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:36px;}
+.stat-card{background:var(--card-bg);border:1px solid var(--border);border-radius:6px;padding:16px 18px;position:relative;overflow:hidden;}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--phosphor-dim);opacity:0.5;}
+.stat-num{font-family:var(--font-mono);font-size:30px;font-weight:700;color:var(--phosphor-bright);line-height:1;}
+.stat-num.amber{color:var(--amber);}
+.stat-label{font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.06em;color:var(--ink-faint);text-transform:uppercase;margin-top:8px;}
+
+.review-cta{display:block;width:100%;background:var(--phosphor);color:#052018;font-family:var(--font-mono);font-weight:700;font-size:14px;letter-spacing:0.03em;text-transform:uppercase;border:none;border-radius:6px;padding:16px;cursor:pointer;margin-bottom:40px;transition:background 0.15s, transform 0.08s;}
+.review-cta:hover{background:var(--phosphor-bright);}
+.review-cta:active{transform:scale(0.99);}
+.review-cta:disabled{background:var(--ink-faint);color:var(--bg);cursor:default;}
+.review-cta .sub{display:block;font-family:var(--font-body);text-transform:none;font-weight:400;letter-spacing:0;font-size:12px;color:#0a2a20;margin-top:3px;opacity:0.75;}
+
+.section-label{font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 14px;display:flex;align-items:center;gap:10px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+.chapter-list{display:flex;flex-direction:column;gap:10px;margin-bottom:40px;}
+.chapter-row{background:var(--card-bg);border:1px solid var(--border);border-radius:6px;padding:16px 18px;cursor:pointer;transition:border-color 0.15s, background 0.15s;display:flex;align-items:center;gap:16px;}
+.chapter-row:hover{border-color:var(--border-strong);background:#111a16;}
+.ch-code{font-family:var(--font-mono);font-size:13px;color:var(--phosphor);border:1px solid var(--phosphor-dim);border-radius:4px;padding:5px 9px;flex-shrink:0;min-width:34px;text-align:center;}
+.ch-info{flex:1;min-width:0;}
+.ch-name{font-family:var(--font-display);font-size:16.5px;color:var(--ink);margin-bottom:6px;}
+.ch-bar-track{height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;display:flex;}
+.ch-bar-fill{height:100%;background:var(--phosphor-dim);}
+.ch-meta{display:flex;gap:14px;font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);margin-top:8px;}
+.ch-meta .due{color:var(--amber);}
+.ch-arrow{color:var(--ink-faint);font-family:var(--font-mono);font-size:18px;flex-shrink:0;}
+
+.footer-note{text-align:center;font-family:var(--font-mono);font-size:10.5px;color:var(--ink-faint);margin-top:40px;line-height:1.8;}
+.reset-link{color:var(--ink-faint);text-decoration:underline;cursor:pointer;background:none;border:none;font-family:var(--font-mono);font-size:10.5px;padding:0;}
+.reset-link:hover{color:var(--danger);}
+
+.hidden{display:none !important;}
+
+.session-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.back-btn{font-family:var(--font-mono);font-size:12px;color:var(--ink-dim);background:none;border:1px solid var(--border);border-radius:5px;padding:7px 12px;cursor:pointer;}
+.back-btn:hover{border-color:var(--border-strong);color:var(--ink);}
+.progress-track{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;margin:0 16px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--phosphor);transition:width 0.25s;}
+.progress-count{font-family:var(--font-mono);font-size:12px;color:var(--ink-faint);white-space:nowrap;}
+
+.scope{
+  background:
+    repeating-linear-gradient(0deg, rgba(91,227,163,0.05) 0px, rgba(91,227,163,0.05) 1px, transparent 1px, transparent 24px),
+    repeating-linear-gradient(90deg, rgba(91,227,163,0.05) 0px, rgba(91,227,163,0.05) 1px, transparent 1px, transparent 24px),
+    var(--card-bg);
+  border:1px solid var(--border-strong);
+  border-radius:8px;
+  min-height:340px;
+  padding:26px 28px;
+  position:relative;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  user-select:none;
+}
+.scope-hud{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;font-family:var(--font-mono);font-size:10.5px;color:var(--ink-faint);}
+.scope-hud .ch-badge{color:var(--phosphor-dim);border:1px solid rgba(123,255,196,0.25);border-radius:3px;padding:3px 7px;}
+.scope-hud .type-badge{letter-spacing:0.08em;text-transform:uppercase;}
+.scope-body{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px 4px;}
+.scope-question{font-family:var(--font-display);font-size:19px;line-height:1.55;color:var(--ink);}
+.scope-answer{font-family:var(--font-body);font-size:16px;line-height:1.75;color:var(--phosphor-bright);}
+.scope-answer .katex{font-size:1.05em;color:var(--phosphor-bright);}
+.scope-question .katex{color:var(--ink);}
+.scope-hint{text-align:center;font-family:var(--font-mono);font-size:10.5px;color:var(--ink-faint);letter-spacing:0.05em;margin-top:16px;}
+.flip-flash{animation:flipflash 0.3s ease;}
+@keyframes flipflash{0%{opacity:0.3;}100%{opacity:1;}}
+
+.rate-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:20px;}
+.rate-btn{font-family:var(--font-mono);font-size:13px;font-weight:700;border-radius:6px;padding:14px 8px;cursor:pointer;border:1px solid;background:transparent;letter-spacing:0.02em;transition:transform 0.08s;}
+.rate-btn:active{transform:scale(0.97);}
+.rate-btn .k{display:block;font-size:10px;font-weight:400;opacity:0.6;margin-top:4px;}
+.rate-hard{color:var(--danger);border-color:rgba(255,122,110,0.4);}
+.rate-hard:hover{background:rgba(255,122,110,0.08);}
+.rate-good{color:var(--amber);border-color:rgba(255,180,84,0.4);}
+.rate-good:hover{background:rgba(255,180,84,0.08);}
+.rate-easy{color:var(--phosphor);border-color:rgba(91,227,163,0.4);}
+.rate-easy:hover{background:rgba(91,227,163,0.08);}
+
+.summary-box{text-align:center;padding:50px 20px;}
+.summary-num{font-family:var(--font-mono);font-size:52px;font-weight:700;color:var(--phosphor-bright);}
+.summary-label{font-family:var(--font-display);font-size:18px;color:var(--ink);margin:6px 0 30px;}
+.summary-stats{display:flex;justify-content:center;gap:28px;margin-bottom:34px;font-family:var(--font-mono);font-size:12px;color:var(--ink-dim);}
+.summary-stats b{color:var(--ink);}
+
+@media(max-width:520px){
+  .stats-row{grid-template-columns:1fr 1fr 1fr;gap:8px;}
+  .stat-card{padding:12px 10px;}
+  .stat-num{font-size:22px;}
+  .scope{padding:20px 16px;min-height:300px;}
+  .scope-question{font-size:16.5px;}
+  .rate-row{gap:6px;}
+  .rate-btn{padding:12px 4px;font-size:12px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand">
+      <span class="brand-mark">CH1&nbsp;500mV</span>
+      <span class="brand-name">Oscillo</span>
+    </div>
+    <span class="readout" id="clock-readout">200,0µs</span>
+  </div>
+
+  <div id="screen-home">
+    <h1>Révisions — Signaux physiques</h1>
+    <p class="subtitle">Définitions, formules et méthodes de tes TD, avec répétition espacée : les cartes que tu maîtrises reviennent moins souvent, celles qui coincent reviennent plus vite.</p>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num amber" id="stat-due">0</div>
+        <div class="stat-label">À réviser</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-mastered">0</div>
+        <div class="stat-label">Maîtrisées</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-total">0</div>
+        <div class="stat-label">Cartes totales</div>
+      </div>
+    </div>
+
+    <button class="review-cta" id="btn-review-all">
+      <span id="review-all-label">Réviser maintenant</span>
+      <span class="sub" id="review-all-sub"></span>
+    </button>
+
+    <div class="section-label">Chapitres</div>
+    <div class="chapter-list" id="chapter-list"></div>
+
+    <div class="footer-note">
+      Progression enregistrée localement dans ce navigateur.<br>
+      <button class="reset-link" id="btn-reset">Réinitialiser toute la progression</button>
+    </div>
+  </div>
+
+  <div id="screen-session" class="hidden">
+    <div class="session-header">
+      <button class="back-btn" id="btn-quit">← Quitter</button>
+      <div class="progress-track"><div class="progress-fill" id="session-progress-fill" style="width:0%"></div></div>
+      <span class="progress-count" id="session-progress-count">0/0</span>
+    </div>
+
+    <div class="scope" id="scope-card">
+      <div class="scope-hud">
+        <span class="ch-badge" id="scope-chapter"></span>
+        <span class="type-badge" id="scope-type"></span>
+      </div>
+      <div class="scope-body">
+        <div class="scope-question" id="scope-content"></div>
+      </div>
+      <div class="scope-hint" id="scope-hint">clique la carte ou appuie sur espace pour révéler</div>
+    </div>
+
+    <div class="rate-row hidden" id="rate-row">
+      <button class="rate-btn rate-hard" data-q="2">Difficile<span class="k">1</span></button>
+      <button class="rate-btn rate-good" data-q="4">Correct<span class="k">2</span></button>
+      <button class="rate-btn rate-easy" data-q="5">Facile<span class="k">3</span></button>
+    </div>
+  </div>
+
+  <div id="screen-summary" class="hidden">
+    <div class="summary-box">
+      <div class="summary-num" id="summary-count">0</div>
+      <div class="summary-label">cartes révisées</div>
+      <div class="summary-stats">
+        <span>Difficile <b id="summary-hard">0</b></span>
+        <span>Correct <b id="summary-good">0</b></span>
+        <span>Facile <b id="summary-easy">0</b></span>
+      </div>
+      <button class="review-cta" id="btn-summary-home" style="max-width:280px;margin:0 auto;">Retour à l'accueil</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+var CHAPTERS = [
+  {
+    id: "s1",
+    code: "S1",
+    name: "Propagation de signaux physiques",
+    cards: [
+      {id:"s1-def-signal", type:"def", q:"Qu'est-ce qu'un signal physique ?", a:"Une grandeur physique qui dépend du temps. Exemples : signaux mécaniques, électriques, électromagnétiques, quantiques, thermiques."},
+      {id:"s1-def-periodique", type:"def", q:"Définition d'un signal périodique", a:"Les variations de son amplitude se reproduisent régulièrement au bout d'une période $T$ constante, appelée période."},
+      {id:"s1-def-sinusoidal", type:"formule", q:"Écrire un signal sinusoïdal $s(t)$ et les relations pulsation / fréquence / période", a:"$$s(t) = A\\cos(\\omega t + \\varphi)$$ avec $\\omega = \\dfrac{2\\pi}{T} = 2\\pi f$ et $f = \\dfrac{1}{T} = \\dfrac{\\omega}{2\\pi}$"},
+      {id:"s1-formule-battements", type:"formule", q:"Formule de la période de battement $T_{batt}$ entre deux signaux de fréquences $f_1$ et $f_2$ proches", a:"$$T_{batt} = \\left|\\dfrac{1}{f_1-f_2}\\right|$$"},
+      {id:"s1-methode-battements", type:"méthode", q:"Superposition de deux signaux sinusoïdaux de fréquences proches : les 4 étapes de la méthode ?", a:"1. Sommer $s = s_1 + s_2$.<br>2. Utiliser $\\cos p+\\cos q = 2\\cos\\frac{p+q}{2}\\cos\\frac{p-q}{2}$.<br>3. Identifier le terme rapide (fréquence $\\frac{f_1+f_2}{2}$) et le terme lent = enveloppe (fréquence $\\left|\\frac{f_1-f_2}{2}\\right|$).<br>4. La période de l'enveloppe = demi-période du terme lent."},
+      {id:"s1-def-onde", type:"def", q:"Définition d'une onde", a:"Phénomène de propagation de proche en proche d'une perturbation (vibration ou grandeur vibrante), sans transport de matière."},
+      {id:"s1-def-onde-1d", type:"def", q:"Onde unidimensionnelle : définition et notation", a:"Propagation dans une seule direction de l'espace ; la grandeur vibrante s'écrit $s(x,t)$."},
+      {id:"s1-formule-onde-prog", type:"formule", q:"Onde progressive unidimensionnelle à célérité $c$ : formes possibles de $s(x,t)$ ?", a:"Sens $+\\vec{u}_x$ : $s(x,t) = f\\left(t-\\dfrac{x}{c}\\right) = F(x-ct)$<br>Sens $-\\vec{u}_x$ : $s(x,t) = g\\left(t+\\dfrac{x}{c}\\right) = G(x+ct)$"},
+      {id:"s1-formule-onde-sin", type:"formule", q:"Onde progressive sinusoïdale : expression et vecteur d'onde $k$", a:"$$s(x,t) = A\\cos(\\omega t \\pm kx + \\varphi)$$ avec $k = \\dfrac{\\omega}{c}$, le vecteur d'onde (ou pulsation spatiale)"},
+      {id:"s1-table-periode", type:"formule", q:"Relations période / fréquence / pulsation : temporelles vs spatiales ?", a:"Temporelle : $T=\\lambda/c$, $f=1/T$, $\\omega=2\\pi f$<br>Spatiale : $\\lambda=cT$, $\\sigma=1/\\lambda$, $k=2\\pi/\\lambda$"},
+      {id:"s1-def-milieu-dispersif", type:"def", q:"Définition d'un milieu dispersif", a:"Milieu dans lequel la vitesse de propagation d'une onde progressive sinusoïdale dépend de sa fréquence."}
+    ]
+  },
+  {
+    id: "s2",
+    code: "S2",
+    name: "Phénomène d'interférences",
+    cards: [
+      {id:"s2-formule-somme", type:"formule", q:"Amplitude résultante $A$ de la superposition de deux signaux sinusoïdaux de même fréquence (amplitudes $A_1,A_2$, phases $\\varphi_1,\\varphi_2$)", a:"$$A = \\sqrt{A_1^2+A_2^2+2A_1A_2\\cos(\\varphi_2-\\varphi_1)}$$"},
+      {id:"s2-def-constructives", type:"def", q:"Condition d'interférences constructives (déphasage et différence de marche)", a:"$\\Delta\\varphi = 2k\\pi$, $k\\in\\mathbb{Z}$, soit $\\delta = p\\lambda$, $p\\in\\mathbb{Z}$"},
+      {id:"s2-def-destructives", type:"def", q:"Condition d'interférences destructives", a:"$\\Delta\\varphi = (2k+1)\\pi$, soit $\\delta = (2p+1)\\dfrac{\\lambda}{2}$"},
+      {id:"s2-def-diff-marche", type:"def", q:"Définition de la différence de marche $\\delta$ et sa relation avec le déphasage", a:"Différence des distances parcourues par les deux ondes depuis leur source jusqu'au point d'interférence.<br>$$\\Delta\\varphi = k\\delta = \\dfrac{2\\pi}{\\lambda}\\delta$$"},
+      {id:"s2-def-chemin-optique", type:"def", q:"Définition du chemin optique entre $S$ et $M$", a:"Dans un milieu homogène et isotrope d'indice $n$ : $$(SM) = n\\,SM$$"},
+      {id:"s2-formule-fresnel", type:"formule", q:"Formule de Fresnel : intensité résultant de l'interférence de deux ondes $I_1,I_2$", a:"$$I = I_1+I_2+2\\sqrt{I_1I_2}\\cos(\\Delta\\varphi) = I_1+I_2+2\\sqrt{I_1I_2}\\cos\\left(\\dfrac{2\\pi\\delta}{\\lambda}\\right)$$"},
+      {id:"s2-formule-interfrange", type:"formule", q:"Formule de l'interfrange $i$ (trous d'Young, distance $a$, écran à distance $D$)", a:"$$i = \\dfrac{\\lambda D}{a}$$"},
+      {id:"s2-methode-interferences", type:"méthode", q:"Méthode générale pour résoudre un exercice d'interférences : les 5 étapes ?", a:"1. Faire un schéma.<br>2. Identifier les deux ondes, écrire leur phase.<br>3. Exprimer la différence de marche en un point donné.<br>4. Appliquer les conditions constructives / destructives.<br>5. Répondre aux questions posées."}
+    ]
+  },
+  {
+    id: "s3",
+    code: "S3",
+    name: "Ondes stationnaires mécaniques",
+    cards: [
+      {id:"s3-def-onde-stat", type:"def", q:"Définition d'une onde stationnaire", a:"Onde dont les variables d'espace et de temps sont découplées : $s(x,t) = f(x)g(t)$. Elle ne se propage pas, elle vibre sur place."},
+      {id:"s3-formule-onde-stat-sin", type:"formule", q:"Forme générale d'une onde stationnaire sinusoïdale", a:"$$s(x,t) = A\\cos(\\omega t+\\varphi)\\sin(kx+\\psi)$$"},
+      {id:"s3-def-noeud", type:"def", q:"Définition d'un nœud de vibration + espacement entre deux nœuds consécutifs", a:"Point où l'amplitude de l'onde stationnaire est nulle. Deux nœuds consécutifs sont espacés de $\\dfrac{\\lambda}{2}$."},
+      {id:"s3-def-ventre", type:"def", q:"Définition d'un ventre de vibration + espacement entre deux ventres consécutifs", a:"Point où l'amplitude est maximale. Deux ventres consécutifs sont espacés de $\\dfrac{\\lambda}{2}$."},
+      {id:"s3-def-noeud-ventre", type:"def", q:"Distance entre un nœud et le ventre le plus proche", a:"$$\\dfrac{\\lambda}{4}$$"},
+      {id:"s3-def-modes-propres", type:"def", q:"Modes propres d'une corde fixée aux deux extrémités : principe ?", a:"Les pulsations temporelle et spatiale sont quantifiées. Chaque pulsation $\\omega_n$ ($n\\in\\mathbb{N}^*$) définit un mode de vibration sélectionné par le dispositif : c'est la résonance."},
+      {id:"s3-formule-melde", type:"formule", q:"Célérité des ondes sur une corde de Melde (tension $T$, masse linéique $\\mu$)", a:"$$c = \\sqrt{\\dfrac{T}{\\mu}}$$"},
+      {id:"s3-methode-modes", type:"méthode", q:"Méthode pour retrouver les fréquences des modes propres d'une corde fixée : les étapes ?", a:"1. Repérer les nœuds imposés par les points d'attache.<br>2. Relier $\\lambda_n$ à la longueur $L$ pour chaque mode.<br>3. En déduire $f_n$ à partir de $\\lambda_n$ et $c$.<br>4. La fréquence fondamentale est $f_1$ ($n=1$)."},
+      {id:"s3-def-cl-acoustique", type:"def", q:"Conditions aux limites acoustiques : extrémité fermée / ouverte d'un tuyau ?", a:"Extrémité fermée = ventre de vibration (de surpression).<br>Extrémité ouverte = nœud de vibration (surpression nulle)."}
+    ]
+  }
+];
+
+var STORAGE_KEY = "oscillo-srs-v1";
+var memoryStore = {};
+var useMemoryFallback = false;
+
+function loadState(){
+  try{
+    var raw = window.localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){
+    useMemoryFallback = true;
+    return memoryStore;
+  }
+}
+function saveState(state){
+  try{
+    if(useMemoryFallback){ memoryStore = state; return; }
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }catch(e){
+    useMemoryFallback = true;
+    memoryStore = state;
+  }
+}
+
+var srsState = loadState();
+
+function getCardState(id){
+  if(!srsState[id]){
+    srsState[id] = {ef: 2.5, interval: 0, repetition: 0, due: 0, seen: false};
+  }
+  return srsState[id];
+}
+
+function applySM2(cardId, quality){
+  var s = getCardState(cardId);
+  s.seen = true;
+  if(quality < 3){
+    s.repetition = 0;
+    s.interval = 1;
+  } else {
+    if(s.repetition === 0){ s.interval = 1; }
+    else if(s.repetition === 1){ s.interval = 6; }
+    else { s.interval = Math.round(s.interval * s.ef); }
+    s.repetition += 1;
+    s.ef = s.ef + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+    if(s.ef < 1.3) s.ef = 1.3;
+  }
+  var now = Date.now();
+  s.due = now + s.interval * 24 * 60 * 60 * 1000;
+  srsState[cardId] = s;
+  saveState(srsState);
+}
+
+function allCards(){
+  var out = [];
+  CHAPTERS.forEach(function(ch){
+    ch.cards.forEach(function(c){ out.push(Object.assign({}, c, {chapterCode: ch.code, chapterId: ch.id})); });
+  });
+  return out;
+}
+
+function isDue(cardId){
+  var s = getCardState(cardId);
+  return !s.seen || s.due <= Date.now();
+}
+
+function isMastered(cardId){
+  var s = getCardState(cardId);
+  return s.seen && s.interval >= 21;
+}
+
+function dueCardsFor(chapterId){
+  var cards = chapterId ? (CHAPTERS.find(function(c){return c.id===chapterId;}).cards) : allCards();
+  return cards.filter(function(c){ return isDue(c.id); });
+}
+
+function renderHome(){
+  var all = allCards();
+  var due = all.filter(function(c){ return isDue(c.id); });
+  var mastered = all.filter(function(c){ return isMastered(c.id); });
+
+  document.getElementById("stat-due").textContent = due.length;
+  document.getElementById("stat-mastered").textContent = mastered.length;
+  document.getElementById("stat-total").textContent = all.length;
+
+  var btn = document.getElementById("btn-review-all");
+  var label = document.getElementById("review-all-label");
+  var sub = document.getElementById("review-all-sub");
+  if(due.length > 0){
+    btn.disabled = false;
+    label.textContent = "Réviser maintenant (" + due.length + ")";
+    sub.textContent = "";
+  } else {
+    btn.disabled = false;
+    label.textContent = "Aucune carte due — réviser en avance";
+    sub.textContent = "Revoir les cartes déjà planifiées, sans attendre.";
+  }
+
+  var list = document.getElementById("chapter-list");
+  list.innerHTML = "";
+  CHAPTERS.forEach(function(ch){
+    var chDue = ch.cards.filter(function(c){ return isDue(c.id); }).length;
+    var chMastered = ch.cards.filter(function(c){ return isMastered(c.id); }).length;
+    var pct = Math.round((chMastered / ch.cards.length) * 100);
+
+    var row = document.createElement("div");
+    row.className = "chapter-row";
+    row.innerHTML =
+      '<span class="ch-code">' + ch.code + '</span>' +
+      '<div class="ch-info">' +
+        '<div class="ch-name">' + ch.name + '</div>' +
+        '<div class="ch-bar-track"><div class="ch-bar-fill" style="width:' + pct + '%"></div></div>' +
+        '<div class="ch-meta"><span>' + ch.cards.length + ' cartes</span>' +
+        (chDue > 0 ? '<span class="due">' + chDue + ' à réviser</span>' : '<span>à jour</span>') +
+        '<span>' + pct + '% maîtrisé</span></div>' +
+      '</div>' +
+      '<span class="ch-arrow">→</span>';
+    row.addEventListener("click", function(){ startSession(ch.id); });
+    list.appendChild(row);
+  });
+}
+
+var session = null;
+
+function startSession(chapterId){
+  var due = dueCardsFor(chapterId);
+  if(due.length === 0){
+    var pool = chapterId ? CHAPTERS.find(function(c){return c.id===chapterId;}).cards.map(function(c){
+      var ch = CHAPTERS.find(function(x){return x.id===chapterId;});
+      return Object.assign({}, c, {chapterCode: ch.code, chapterId: ch.id});
+    }) : allCards();
+    due = pool;
+  }
+  shuffle(due);
+  session = {
+    queue: due,
+    index: 0,
+    revealed: false,
+    stats: {hard:0, good:0, easy:0}
+  };
+  showScreen("session");
+  renderCard();
+}
+
+function shuffle(arr){
+  for(var i = arr.length - 1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i+1));
+    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  }
+}
+
+function renderCard(){
+  if(!session) return;
+  if(session.index >= session.queue.length){
+    finishSession();
+    return;
+  }
+  var card = session.queue[session.index];
+  session.revealed = false;
+
+  document.getElementById("scope-chapter").textContent = card.chapterCode;
+  document.getElementById("scope-type").textContent = card.type;
+  var content = document.getElementById("scope-content");
+  content.className = "scope-question";
+  content.innerHTML = card.q;
+  document.getElementById("scope-hint").textContent = "clique la carte ou appuie sur espace pour révéler";
+  document.getElementById("rate-row").classList.add("hidden");
+
+  document.getElementById("session-progress-count").textContent = (session.index) + "/" + session.queue.length;
+  document.getElementById("session-progress-fill").style.width = (session.index / session.queue.length * 100) + "%";
+
+  renderMath(content);
+}
+
+function revealCard(){
+  if(!session || session.revealed) return;
+  session.revealed = true;
+  var card = session.queue[session.index];
+  var content = document.getElementById("scope-content");
+  content.className = "scope-answer";
+  content.innerHTML = card.a;
+  content.parentElement.parentElement.classList.add("flip-flash");
+  setTimeout(function(){ content.parentElement.parentElement.classList.remove("flip-flash"); }, 300);
+  document.getElementById("scope-hint").textContent = "note ta réponse ci-dessous";
+  document.getElementById("rate-row").classList.remove("hidden");
+  renderMath(content);
+}
+
+function rateCard(quality){
+  if(!session || !session.revealed) return;
+  var card = session.queue[session.index];
+  applySM2(card.id, quality);
+  if(quality <= 2) session.stats.hard++;
+  else if(quality <= 4) session.stats.good++;
+  else session.stats.easy++;
+  session.index++;
+  renderCard();
+}
+
+function finishSession(){
+  document.getElementById("summary-count").textContent = session.queue.length;
+  document.getElementById("summary-hard").textContent = session.stats.hard;
+  document.getElementById("summary-good").textContent = session.stats.good;
+  document.getElementById("summary-easy").textContent = session.stats.easy;
+  session = null;
+  showScreen("summary");
+}
+
+function renderMath(el){
+  if(window.renderMathInElement){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},
+        {left: "$", right: "$", display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+
+function showScreen(name){
+  ["home","session","summary"].forEach(function(s){
+    document.getElementById("screen-" + s).classList.toggle("hidden", s !== name);
+  });
+  if(name === "home") renderHome();
+}
+
+document.getElementById("btn-review-all").addEventListener("click", function(){ startSession(null); });
+document.getElementById("btn-quit").addEventListener("click", function(){ session = null; showScreen("home"); });
+document.getElementById("btn-summary-home").addEventListener("click", function(){ showScreen("home"); });
+document.getElementById("scope-card").addEventListener("click", revealCard);
+document.getElementById("rate-row").addEventListener("click", function(e){
+  var btn = e.target.closest(".rate-btn");
+  if(btn) rateCard(parseInt(btn.getAttribute("data-q"), 10));
+});
+document.getElementById("btn-reset").addEventListener("click", function(){
+  if(confirm("Réinitialiser toute la progression ? Cette action est irréversible.")){
+    srsState = {};
+    saveState(srsState);
+    renderHome();
+  }
+});
+document.addEventListener("keydown", function(e){
+  var sessionVisible = !document.getElementById("screen-session").classList.contains("hidden");
+  if(!sessionVisible) return;
+  if(e.code === "Space"){ e.preventDefault(); revealCard(); }
+  if(session && session.revealed){
+    if(e.key === "1") rateCard(2);
+    if(e.key === "2") rateCard(4);
+    if(e.key === "3") rateCard(5);
+  }
+});
+
+var d = new Date();
+document.getElementById("clock-readout").textContent =
+  d.toLocaleDateString("fr-FR", {day:"2-digit", month:"2-digit", year:"numeric"});
+
+renderHome();
+</script>
+</body>
+</html>
