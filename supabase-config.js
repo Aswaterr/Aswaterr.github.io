@@ -12,6 +12,6 @@
    ============================================================ */
 
 window.OSCILLO_SUPABASE_CONFIG = {
-  url: "COLLE_TA_VALEUR_ICI",
-  anonKey: "COLLE_TA_VALEUR_ICI"
+  url: "https://iautjqanmkpufcosllma.supabase.co",
+  anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlhdXRqcWFubWtwdWZjb3NsbG1hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyMTA0ODIsImV4cCI6MjA5OTc4NjQ4Mn0.WuXVcykeaISD62v2zyvw8HrauOMmGH8ePO11kzVxZu0"
 };
