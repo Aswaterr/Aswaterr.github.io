@@ -324,8 +324,48 @@ function loadScript(src){
 }
 
 var SUBJECTS = window.OSCILLO_SUBJECTS || [];
-var MANIFEST = window.OSCILLO_MANIFEST || [];
 var COURSES = [];
+
+// Déduit {owner, repo} à partir de l'URL GitHub Pages actuelle, pour interroger
+// l'API GitHub et lister automatiquement le contenu du dossier courses/.
+function inferGithubRepo(){
+  var host = window.location.hostname;
+  if(host.indexOf("github.io") === -1) return null;
+  var owner = host.split(".")[0];
+  var pathParts = window.location.pathname.split("/").filter(Boolean);
+  if(pathParts.length > 0){
+    // Site de projet : owner.github.io/repo-name/...
+    return { owner: owner, repo: pathParts[0] };
+  }
+  // Site utilisateur : owner.github.io (le repo s'appelle owner.github.io)
+  return { owner: owner, repo: host };
+}
+
+// Découvre dynamiquement les fichiers .js présents dans courses/ via l'API GitHub,
+// puis les charge tous. Se dégrade proprement (aucun cours chargé) si l'API
+// échoue (hors ligne, quota dépassé, test en local hors GitHub Pages, etc).
+function discoverAndLoadCourses(){
+  var repoInfo = inferGithubRepo();
+  if(!repoInfo){
+    console.warn("Auto-détection impossible (pas sur github.io) — aucun cours chargé.");
+    return Promise.resolve();
+  }
+  var apiUrl = "https://api.github.com/repos/" + repoInfo.owner + "/" + repoInfo.repo + "/contents/courses";
+  return fetch(apiUrl)
+    .then(function(res){
+      if(!res.ok) throw new Error("GitHub API a répondu " + res.status);
+      return res.json();
+    })
+    .then(function(files){
+      var jsFiles = files
+        .filter(function(f){ return f.type === "file" && /\.js$/i.test(f.name); })
+        .map(function(f){ return "courses/" + f.name; });
+      return Promise.all(jsFiles.map(loadScript));
+    })
+    .catch(function(err){
+      console.warn("Auto-détection des cours échouée :", err.message);
+    });
+}
 
 var STORAGE_KEY = "oscillo-srs-v2";
 var memoryStore = {};
@@ -451,7 +491,7 @@ function subjectCode(id){ var s = SUBJECTS.find(function(x){ return x.id === id;
 var currentSubject = null;
 var session = null;
 
-Promise.all(MANIFEST.map(loadScript)).then(function(){
+discoverAndLoadCourses().then(function(){
   COURSES = window.OSCILLO_COURSES || [];
   cloudEnabled = supabaseConfigLooksReal(window.OSCILLO_SUPABASE_CONFIG) && !!window.supabase;
 

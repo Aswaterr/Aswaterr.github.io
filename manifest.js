@@ -1,10 +1,12 @@
 /* ============================================================
-   MANIFESTE — liste des matières et des fichiers de cours
+   MANIFESTE — liste des matières disponibles
    ============================================================
-   Pour ajouter un nouveau cours :
-   1. Dépose le fichier courses/xxx.js à côté de celui-ci
-   2. Ajoute son chemin dans OSCILLO_MANIFEST ci-dessous
-   C'est tout — index.html n'a JAMAIS besoin d'être modifié.
+   Les cours (fichiers .js dans courses/) sont maintenant
+   détectés automatiquement — plus besoin de les lister ici.
+   Il suffit de déposer un fichier dans courses/ pour qu'il
+   apparaisse dans l'appli au prochain chargement.
+
+   Ce fichier ne sert plus qu'à définir les matières fixes.
    ============================================================ */
 
 window.OSCILLO_SUBJECTS = [
@@ -14,19 +16,4 @@ window.OSCILLO_SUBJECTS = [
   { id: "si",        code: "CH4", name: "Sciences de l'ingénieur" },
   { id: "anglais",   code: "CH5", name: "Anglais" },
   { id: "francais",  code: "CH6", name: "Français" }
-];
-
-window.OSCILLO_MANIFEST = [
-  "courses/physique-s1.js",
-  "courses/physique-s2.js",
-  "courses/physique-s3.js",
-  "courses/physique-o1.js",
-  "courses/physique-o2.js",
-  "courses/physique-o3.js",
-  "courses/anglais-t1.js",
-  "courses/anglais-t2.js",
-  "courses/anglais-t3.js",
-  "courses/maths-m1.js",
-  "courses/maths-m2.js",
-  "courses/maths-m3.js"
 ];
