@@ -25,5 +25,8 @@ window.OSCILLO_MANIFEST = [
   "courses/physique-o3.js",
   "courses/anglais-t1.js",
   "courses/anglais-t2.js",
-  "courses/anglais-t3.js"
+  "courses/anglais-t3.js",
+  "courses/maths-m1.js",
+  "courses/maths-m2.js",
+  "courses/maths-m3.js"
 ];
