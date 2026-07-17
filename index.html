@@ -99,6 +99,11 @@ h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px
 .reset-link{color:var(--ink-faint);text-decoration:underline;cursor:pointer;background:none;border:none;font-family:var(--font-mono);font-size:10.5px;padding:0;margin:0 6px;}
 .reset-link:hover{color:var(--danger);}
 
+.settings-row{background:var(--card-bg);border:1px solid var(--border);border-radius:6px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;}
+.settings-label{font-family:var(--font-body);font-size:13px;color:var(--ink-dim);}
+.settings-select{background:var(--bg);color:var(--ink);border:1px solid var(--border);border-radius:5px;padding:7px 10px;font-family:var(--font-mono);font-size:12px;cursor:pointer;}
+.settings-select:focus{outline:none;border-color:var(--border-strong);}
+
 .hidden{display:none !important;}
 
 .back-btn{font-family:var(--font-mono);font-size:12px;color:var(--ink-dim);background:none;border:1px solid var(--border);border-radius:5px;padding:7px 12px;cursor:pointer;}
@@ -243,6 +248,17 @@ h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px
 
     <div class="section-label">Matières</div>
     <div class="subject-grid" id="subject-grid"></div>
+
+    <div class="section-label">Réglages</div>
+    <div class="settings-row">
+      <label for="requeue-select" class="settings-label">Une carte "Difficile" revient après</label>
+      <select id="requeue-select" class="settings-select">
+        <option value="3">3 cartes</option>
+        <option value="6">6 cartes</option>
+        <option value="10">10 cartes</option>
+        <option value="999999">la fin de la session</option>
+      </select>
+    </div>
 
     <div class="footer-note" id="footer-note"></div>
   </div>
@@ -689,12 +705,27 @@ function openSubject(subjectId){
   showScreen("subject");
 }
 
+var REQUEUE_STORAGE_KEY = "oscillo-requeue-after";
+function loadRequeueAfter(){
+  try{
+    var v = window.localStorage.getItem(REQUEUE_STORAGE_KEY);
+    var n = v ? parseInt(v, 10) : 6;
+    return isNaN(n) ? 6 : n;
+  }catch(e){
+    return 6;
+  }
+}
+function saveRequeueAfter(n){
+  try{ window.localStorage.setItem(REQUEUE_STORAGE_KEY, String(n)); }catch(e){}
+}
+var REQUEUE_AFTER = loadRequeueAfter(); // nombre de cartes avant qu'une carte "Difficile" revienne dans la session
+
 function startSession(filterFn){
   var pool = flatCards(filterFn);
   var due = pool.filter(function(c){ return isDue(c.gid); });
   if(due.length === 0) due = pool;
   shuffle(due);
-  session = { queue: due, index: 0, revealed: false, stats: {hard:0, good:0, easy:0} };
+  session = { queue: due, originalTotal: due.length, index: 0, revealed: false, stats: {hard:0, good:0, easy:0}, doneGids: {} };
   showScreen("session");
   renderCard();
 }
@@ -713,15 +744,16 @@ function renderCard(){
   session.revealed = false;
 
   document.getElementById("scope-chapter").textContent = subjectCode(card.subjectId) + " · " + card.courseCode;
-  document.getElementById("scope-type").textContent = card.type;
+  document.getElementById("scope-type").textContent = card.type + (card.requeued ? " · ↺ à revoir" : "");
   var content = document.getElementById("scope-content");
   content.className = "scope-question";
   content.innerHTML = card.q;
   document.getElementById("scope-hint").textContent = "clique la carte ou appuie sur espace pour révéler";
   document.getElementById("rate-row").classList.add("hidden");
 
-  document.getElementById("session-progress-count").textContent = session.index + "/" + session.queue.length;
-  document.getElementById("session-progress-fill").style.width = (session.index / session.queue.length * 100) + "%";
+  var doneCount = Object.keys(session.doneGids).length;
+  document.getElementById("session-progress-count").textContent = doneCount + "/" + session.originalTotal;
+  document.getElementById("session-progress-fill").style.width = (doneCount / session.originalTotal * 100) + "%";
 
   renderMath(content);
 }
@@ -744,15 +776,23 @@ function rateCard(quality){
   if(!session || !session.revealed) return;
   var card = session.queue[session.index];
   applySM2(card.gid, quality);
-  if(quality <= 2) session.stats.hard++;
-  else if(quality <= 4) session.stats.good++;
-  else session.stats.easy++;
+  if(quality <= 2){
+    session.stats.hard++;
+    // la carte revient plus loin dans la session tant qu'elle n'est pas repassée en Correct/Facile
+    var insertAt = Math.min(session.index + 1 + REQUEUE_AFTER, session.queue.length);
+    var requeuedCard = Object.assign({}, card, {requeued: true});
+    session.queue.splice(insertAt, 0, requeuedCard);
+  } else {
+    if(quality <= 4) session.stats.good++;
+    else session.stats.easy++;
+    session.doneGids[card.gid] = true;
+  }
   session.index++;
   renderCard();
 }
 
 function finishSession(){
-  document.getElementById("summary-count").textContent = session.queue.length;
+  document.getElementById("summary-count").textContent = session.originalTotal;
   document.getElementById("summary-hard").textContent = session.stats.hard;
   document.getElementById("summary-good").textContent = session.stats.good;
   document.getElementById("summary-easy").textContent = session.stats.easy;
@@ -801,6 +841,18 @@ document.addEventListener("keydown", function(e){
     if(e.key === "2") rateCard(4);
     if(e.key === "3") rateCard(5);
   }
+});
+
+var requeueSelect = document.getElementById("requeue-select");
+requeueSelect.value = String(REQUEUE_AFTER);
+if(requeueSelect.value !== String(REQUEUE_AFTER)){
+  // valeur stockée non présente dans les options (ancienne version) : on retombe sur 6
+  REQUEUE_AFTER = 6;
+  requeueSelect.value = "6";
+}
+requeueSelect.addEventListener("change", function(){
+  REQUEUE_AFTER = parseInt(requeueSelect.value, 10);
+  saveRequeueAfter(REQUEUE_AFTER);
 });
 
 initAuthActions();
