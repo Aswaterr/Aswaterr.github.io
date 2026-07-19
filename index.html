@@ -108,6 +108,8 @@ h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px
 
 .back-btn{font-family:var(--font-mono);font-size:12px;color:var(--ink-dim);background:none;border:1px solid var(--border);border-radius:5px;padding:7px 12px;cursor:pointer;}
 .back-btn:hover{border-color:var(--border-strong);color:var(--ink);}
+.back-btn:disabled{opacity:0.35;cursor:default;}
+.back-btn:disabled:hover{border-color:var(--border);color:var(--ink-dim);}
 
 .subject-header{display:flex;align-items:center;gap:14px;margin-bottom:24px;}
 .subject-header h1{margin:0;font-size:24px;}
@@ -186,6 +188,9 @@ h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px
   .scope-question{font-size:16.5px;}
   .rate-row{gap:6px;}
   .rate-btn{padding:12px 4px;font-size:12px;}
+  .session-header{flex-wrap:wrap;row-gap:8px;}
+  .session-header .back-btn{padding:7px 9px;font-size:11px;}
+  .progress-track{order:3;flex-basis:100%;margin:4px 0 0;}
 }
 </style>
 </head>
@@ -282,6 +287,7 @@ h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px
   <div id="screen-session" class="hidden">
     <div class="session-header">
       <button class="back-btn" id="btn-quit">← Quitter</button>
+      <button class="back-btn" id="btn-prev-card" title="Revenir à la carte précédente">‹ Précédente</button>
       <div class="progress-track"><div class="progress-fill" id="session-progress-fill" style="width:0%"></div></div>
       <span class="progress-count" id="session-progress-count">0/0</span>
     </div>
@@ -504,6 +510,41 @@ function flatCards(filterFn){
 function subjectName(id){ var s = SUBJECTS.find(function(x){ return x.id === id; }); return s ? s.name : id; }
 function subjectCode(id){ var s = SUBJECTS.find(function(x){ return x.id === id; }); return s ? s.code : "??"; }
 
+var SESSION_STORAGE_KEY = "oscillo-session-v1";
+function saveSessionState(){
+  try{
+    if(session) window.localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+    else window.localStorage.removeItem(SESSION_STORAGE_KEY);
+  }catch(e){}
+}
+function loadSavedSession(){
+  try{
+    var raw = window.localStorage.getItem(SESSION_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){
+    return null;
+  }
+}
+function clearSavedSession(){
+  try{ window.localStorage.removeItem(SESSION_STORAGE_KEY); }catch(e){}
+}
+// Reprend une session de révision interrompue (ex : onglet déchargé par le
+// navigateur) au lieu de repartir sur l'accueil. Se rabat sur l'accueil si
+// rien n'est sauvegardé ou si la session sauvegardée est déjà terminée.
+function resumeOrHome(){
+  var saved = loadSavedSession();
+  if(saved && saved.queue && saved.queue.length && saved.index < saved.queue.length){
+    var wasRevealed = !!saved.revealed;
+    session = saved;
+    showScreen("session");
+    renderCard();
+    if(wasRevealed) revealCard();
+  } else {
+    clearSavedSession();
+    showScreen("home");
+  }
+}
+
 var currentSubject = null;
 var session = null;
 
@@ -514,7 +555,7 @@ discoverAndLoadCourses().then(function(){
   if(!cloudEnabled){
     srsState = loadLocalState();
     document.getElementById("screen-loading").classList.add("hidden");
-    showScreen("home");
+    resumeOrHome();
     return;
   }
 
@@ -532,11 +573,11 @@ discoverAndLoadCourses().then(function(){
           syncToCloud(srsState);
         }
         saveLocalState(srsState);
-        showScreen("home");
+        resumeOrHome();
         setSyncDot("on");
       }).catch(function(){
         srsState = loadLocalState();
-        showScreen("home");
+        resumeOrHome();
         setSyncDot("off");
       });
     } else {
@@ -728,6 +769,7 @@ function startSession(filterFn){
   session = { queue: due, originalTotal: due.length, index: 0, revealed: false, stats: {hard:0, good:0, easy:0}, doneGids: {} };
   showScreen("session");
   renderCard();
+  saveSessionState();
 }
 
 function shuffle(arr){
@@ -754,6 +796,7 @@ function renderCard(){
   var doneCount = Object.keys(session.doneGids).length;
   document.getElementById("session-progress-count").textContent = doneCount + "/" + session.originalTotal;
   document.getElementById("session-progress-fill").style.width = (doneCount / session.originalTotal * 100) + "%";
+  document.getElementById("btn-prev-card").disabled = session.index <= 0;
 
   renderMath(content);
 }
@@ -770,6 +813,40 @@ function revealCard(){
   document.getElementById("scope-hint").textContent = "note ta réponse ci-dessous";
   document.getElementById("rate-row").classList.remove("hidden");
   renderMath(content);
+  saveSessionState();
+}
+
+// Retourne la carte affichée vers sa face question (sans changer de carte),
+// pour pouvoir la re-consulter avant de noter sa réponse.
+function unrevealCard(){
+  if(!session || !session.revealed) return;
+  session.revealed = false;
+  var card = session.queue[session.index];
+  var content = document.getElementById("scope-content");
+  content.className = "scope-question";
+  content.innerHTML = card.q;
+  content.parentElement.parentElement.classList.add("flip-flash");
+  setTimeout(function(){ content.parentElement.parentElement.classList.remove("flip-flash"); }, 300);
+  document.getElementById("scope-hint").textContent = "clique la carte ou appuie sur espace pour révéler";
+  document.getElementById("rate-row").classList.add("hidden");
+  renderMath(content);
+  saveSessionState();
+}
+
+function toggleReveal(){
+  if(!session) return;
+  if(session.revealed) unrevealCard();
+  else revealCard();
+}
+
+// Revient à la carte précédente dans la file, pour la reconsulter ou la
+// re-noter. Ne modifie ni les stats ni la file : c'est un simple recul du
+// curseur, avancer à nouveau (bouton de note) rejoue naturellement la suite.
+function goToPreviousCard(){
+  if(!session || session.index <= 0) return;
+  session.index--;
+  renderCard();
+  saveSessionState();
 }
 
 function rateCard(quality){
@@ -789,6 +866,7 @@ function rateCard(quality){
   }
   session.index++;
   renderCard();
+  saveSessionState();
 }
 
 function finishSession(){
@@ -797,6 +875,7 @@ function finishSession(){
   document.getElementById("summary-good").textContent = session.stats.good;
   document.getElementById("summary-easy").textContent = session.stats.easy;
   session = null;
+  clearSavedSession();
   showScreen("summary");
 }
 
@@ -825,9 +904,10 @@ function showScreen(name){
 
 document.getElementById("btn-review-all").addEventListener("click", function(){ startSession(null); });
 document.getElementById("btn-subject-back").addEventListener("click", function(){ showScreen("home"); });
-document.getElementById("btn-quit").addEventListener("click", function(){ session = null; showScreen(currentSubject ? "subject" : "home"); });
+document.getElementById("btn-quit").addEventListener("click", function(){ session = null; clearSavedSession(); showScreen(currentSubject ? "subject" : "home"); });
 document.getElementById("btn-summary-home").addEventListener("click", function(){ currentSubject = null; showScreen("home"); });
-document.getElementById("scope-card").addEventListener("click", revealCard);
+document.getElementById("scope-card").addEventListener("click", toggleReveal);
+document.getElementById("btn-prev-card").addEventListener("click", goToPreviousCard);
 document.getElementById("rate-row").addEventListener("click", function(e){
   var btn = e.target.closest(".rate-btn");
   if(btn) rateCard(parseInt(btn.getAttribute("data-q"), 10));
@@ -835,7 +915,8 @@ document.getElementById("rate-row").addEventListener("click", function(e){
 document.addEventListener("keydown", function(e){
   var sessionVisible = !document.getElementById("screen-session").classList.contains("hidden");
   if(!sessionVisible) return;
-  if(e.code === "Space"){ e.preventDefault(); revealCard(); }
+  if(e.code === "Space"){ e.preventDefault(); toggleReveal(); }
+  if(e.key === "ArrowLeft"){ e.preventDefault(); goToPreviousCard(); }
   if(session && session.revealed){
     if(e.key === "1") rateCard(2);
     if(e.key === "2") rateCard(4);
