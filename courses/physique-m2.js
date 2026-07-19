@@ -1,0 +1,25 @@
+/* Cours : Physique — M2 : Lois de Newton */
+window.OSCILLO_COURSES = window.OSCILLO_COURSES || [];
+window.OSCILLO_COURSES.push({
+  subject: "physique",
+  id: "m2",
+  name: "Lois de Newton",
+  cards: [
+    {id:"def-masse-centre-inertie", type:"def", q:"Définir la masse et le centre d'inertie d'un système de points", a:"Masse : grandeur qui mesure la capacité d'un corps à résister à la mise en mouvement.<br>Centre d'inertie : $$m_{tot}\\overrightarrow{OG}=\\sum_i m_i\\overrightarrow{OM_i}$$"},
+    {id:"formule-quantite-mouvement", type:"formule", q:"Quantité de mouvement d'un point matériel et d'un système de points", a:"Point matériel : $\\vec{p}=m\\vec{v}$.<br>Système de points : $$\\vec{p}=\\sum_i m_i\\vec{v_i}=m_{tot}\\vec{v_G}$$"},
+    {id:"def-force-resultante", type:"def", q:"Définir une force et la résultante des forces sur un point matériel", a:"Force : action subie par un point matériel de la part d'autres systèmes, modélisée par un vecteur. Résultante : $$\\vec{F}=\\sum_k \\vec{f_k}$$ (somme vectorielle des différentes forces)."},
+    {id:"formule-troisieme-loi", type:"formule", q:"Énoncer le principe des actions réciproques (3ème loi de Newton)", a:"Si $A$ exerce sur $B$ une force $\\vec{F}_{A/B}$, alors $B$ exerce sur $A$ une force $\\vec{F}_{B/A}$ opposée, les deux étant portées par la droite (AB) : $$\\vec{F}_{B/A}=-\\vec{F}_{A/B}$$"},
+    {id:"def-systeme-isole", type:"def", q:"Définir système fermé, isolé et pseudo-isolé", a:"Système fermé : n'échange pas de matière avec l'extérieur.<br>Système isolé : n'échange ni matière ni énergie ⇔ système fermé sans aucune action extérieure.<br>Système pseudo-isolé : système fermé soumis à des actions extérieures qui se compensent."},
+    {id:"def-principe-inertie", type:"def", q:"Énoncer le principe d'inertie (1ère loi de Newton)", a:"Il existe des référentiels galiléens tels que tout point matériel de masse constante isolé ou pseudo-isolé est immobile ou animé d'un mouvement rectiligne uniforme.<br>Tout référentiel en translation rectiligne uniforme dans un référentiel galiléen est galiléen."},
+    {id:"formule-deuxieme-loi", type:"formule", q:"Énoncer la loi de la quantité de mouvement (2ème loi de Newton)", a:"Dans un référentiel galiléen : $$\\dfrac{d\\vec{p}}{dt}=\\sum \\vec{F}_{ext}$$ Pour un système fermé : $$m_{tot}\\vec{a_G}=\\sum \\vec{F}_{ext}$$"},
+    {id:"methode-etude-systeme-mouvement", type:"méthode", q:"Méthode : étudier un système en mouvement avec les lois de Newton", a:"1. Définir le référentiel d'étude.<br>2. Définir le système étudié.<br>3. Réaliser le bilan des forces qui s'exercent sur le système.<br>4. Appliquer la deuxième loi de Newton.<br>5. Projeter la relation vectorielle selon les vecteurs unitaires du repère d'étude."},
+    {id:"formule-force-electromagnetique", type:"formule", q:"Force d'interaction électromagnétique entre deux charges", a:"$$\\vec{F}_{A/B}=\\dfrac{1}{4\\pi\\varepsilon_0}\\dfrac{q_Aq_B}{d^2}\\vec{u}_{A\\to B}$$ Attractive si $q_Aq_B<0$, répulsive si $q_Aq_B>0$. $\\varepsilon_0=8{,}85\\times10^{-12}\\,\\text{F.m}^{-1}$."},
+    {id:"formule-force-gravitationnelle", type:"formule", q:"Force d'interaction gravitationnelle entre deux masses", a:"$$\\vec{F}_{A/B}=-G\\dfrac{m_Am_B}{d^2}\\vec{u}_{A\\to B}$$ Toujours attractive. $G=6{,}67\\times10^{-11}\\,\\text{N.m}^2\\text{.kg}^{-2}$."},
+    {id:"formule-poids-chute-libre", type:"formule", q:"Poids et équations horaires d'une chute libre avec vitesse initiale $\\vec{v_0}$ (angle α)", a:"$$\\vec{P}=m\\vec{g}, \\quad \\|\\vec{g}\\|\\approx 9{,}8\\,\\text{m.s}^{-2}$$ Équations horaires : $$x(t)=v_0\\cos\\alpha\\,t+x_0, \\quad y(t)=-\\dfrac12 gt^2+v_0\\sin\\alpha\\,t+y_0$$ Trajectoire : $$y(x)=-\\dfrac12 g\\left(\\dfrac{x-x_0}{v_0\\cos\\alpha}\\right)^2+(x-x_0)\\tan\\alpha+y_0$$"},
+    {id:"formule-frottements-fluides", type:"formule", q:"Expressions des forces de frottement fluide", a:"Cas général : $$\\vec{f}=-\\beta v\\vec{v}$$ Mouvements lents : $$\\vec{f}=-\\alpha\\vec{v}$$"},
+    {id:"formule-poussee-archimede", type:"formule", q:"Poussée d'Archimède", a:"Pour un système plongé dans un fluide en équilibre dans le champ de pesanteur : $$\\vec{\\Pi}=-\\rho_f V_i\\vec{g}$$ $\\rho_f$ : masse volumique du fluide, $V_i$ : volume immergé."},
+    {id:"def-reaction-support", type:"def", q:"Décomposer la réaction du support en ses deux composantes", a:"$$\\vec{R}=\\vec{R_n}+\\vec{R_t}$$ $\\vec{R_n}$ : composante normale (perpendiculaire au support).<br>$\\vec{R_t}$ : composante tangentielle (parallèle au support)."},
+    {id:"formule-coulomb-frottement-solide", type:"formule", q:"Lois de Coulomb du frottement solide", a:"Si le point glisse sur le support : $\\|\\vec{R_t}\\|=\\mu_D\\|\\vec{R_n}\\|$, avec $\\vec{R_t}$ opposée à $\\vec{v}$.<br>Si le point est immobile : $\\|\\vec{R_t}\\|<\\mu_S\\|\\vec{R_n}\\|$.<br>$\\mu_D,\\mu_S$ : coefficients de frottement dynamique et statique."},
+    {id:"formule-force-rappel-ressort", type:"formule", q:"Force de rappel exercée par un ressort", a:"Pour un ressort de raideur $k$ et de longueur à vide $l_0$ : $$\\vec{F}=-k(l-l_0)\\vec{u}$$"}
+  ]
+});
