@@ -2,7 +2,7 @@
 window.OSCILLO_COURSES = window.OSCILLO_COURSES || [];
 window.OSCILLO_COURSES.push({
   subject: "maths",
-  id: "m4",
+  id: "m9",
   name: "Calcul matriciel et systèmes linéaires",
   cards: [
     {id:"def-matrice", type:"def", q:"Définir une matrice de type $(n,p)$ à coefficients dans $\\mathbb{K}$", a:"Tableau de $n\\times p$ éléments de $\\mathbb{K}$ rangés sur $n$ lignes et $p$ colonnes : $A=(a_{ij})$. L'ensemble des matrices à $n$ lignes et $p$ colonnes est noté $\\mathcal{M}_{n,p}(\\mathbb{K})$. Si $n=p$, on parle de matrices carrées, notées $\\mathcal{M}_n(\\mathbb{K})$. Convention : le premier indice de $a_{ij}$ est toujours l'indice de ligne."},
