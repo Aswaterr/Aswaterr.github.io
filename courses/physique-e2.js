@@ -1,0 +1,22 @@
+/* Cours : Physique — E2 : Circuits linéaires du 1er ordre */
+window.OSCILLO_COURSES = window.OSCILLO_COURSES || [];
+window.OSCILLO_COURSES.push({
+  subject: "physique",
+  id: "e2",
+  name: "Circuits linéaires du 1er ordre",
+  cards: [
+    {id:"def-condensateur", type:"def", q:"Définir le condensateur : relation charge/tension, relation courant/tension, continuité", a:"Deux armatures conductrices séparées par un isolant, portant des charges opposées $q=Cu$ ($C$ : capacité, en farad F).<br>En convention récepteur : $$i=C\\dfrac{du}{dt}$$ Continuité : $u$ et $q$ sont continues."},
+    {id:"formule-puissance-condensateur", type:"formule", q:"Exprimer la puissance reçue par un condensateur", a:"$$p=\\dfrac{d}{dt}\\left(\\dfrac{1}{2}Cu^2\\right)$$"},
+    {id:"def-bobine", type:"def", q:"Définir la bobine : relation courant/tension, puissance, continuité", a:"Dipôle constitué de spires de fil conducteur, caractérisé par son inductance $L$ (en henry H).<br>En convention récepteur : $$u=L\\dfrac{di}{dt}$$ Puissance reçue : $p=\\dfrac{d}{dt}\\left(\\dfrac{1}{2}Li^2\\right)$.<br>Continuité : l'intensité qui la traverse est continue."},
+    {id:"def-bobine-reelle", type:"def", q:"Comment modélise-t-on une bobine réelle ?", a:"Bobine idéale en série avec une résistance, appelée résistance interne."},
+    {id:"methode-charge-decharge-rc", type:"méthode", q:"Décrire les deux phases d'un circuit RC alimenté par un commutateur (position 1 / position 2)", a:"Position 1 : le dipôle RC est soumis à un échelon de tension $E$ $\\Rightarrow$ charge du condensateur.<br>Position 2 : tension nulle aux bornes du RC $\\Rightarrow$ décharge du condensateur.<br>Dans les deux cas : régime transitoire puis régime permanent."},
+    {id:"propriete-ci-rc-echelon", type:"propriété", q:"Conditions initiales d'un RC série soumis à un échelon de tension $E$ (condensateur déchargé)", a:"Pour $t<0$ : $i=0$, $u_C=0$.<br>Continuité de la tension : $u_C(0^+)=u_C(0^-)=0$.<br>Discontinuité du courant (loi des mailles) : $i(0^+)=\\dfrac{E}{R}$."},
+    {id:"methode-equation-uc-rc-echelon", type:"méthode", q:"Établir l'équation différentielle vérifiée par $u_C(t)$ pour un RC série soumis à un échelon $E$ (méthode)", a:"Loi des mailles : $u_G=u_C+u_R$.<br>Loi d'Ohm : $u_R=Ri=RC\\dfrac{du_C}{dt}$.<br>D'où, avec $\\tau=RC$ : $$\\dfrac{du_C}{dt}+\\dfrac{u_C}{\\tau}=\\dfrac{E}{\\tau}$$"},
+    {id:"formule-solution-uc-rc-echelon", type:"formule", q:"Donner la solution $u_C(t)$ pour un RC série soumis à un échelon $E$ (condensateur initialement déchargé)", a:"$$u_C(t)=E\\left(1-\\exp\\left(-\\dfrac{t}{\\tau}\\right)\\right)$$ (solution homogène $U\\exp(-t/\\tau)$ + solution particulière $E$, avec $U=-E$ déterminée par $u_C(0)=0$)."},
+    {id:"propriete-regime-permanent-5tau", type:"propriété", q:"À partir de quand considère-t-on le régime permanent établi dans un circuit du 1er ordre ?", a:"Le régime permanent est établi pour $t>5\\tau$."},
+    {id:"methode-bilan-puissance-rc", type:"méthode", q:"Décrire la méthode pour réaliser un bilan de puissance sur un RC série (échelon)", a:"1. Partir de la loi des mailles : $u_C+Ri=E$.<br>2. Multiplier par $i$ : $u_Ci+Ri^2=Ei$, soit $\\dfrac{d}{dt}\\left(\\dfrac{Cu_C^2}{2}\\right)+Ri^2=Ei$.<br>3. Identifier : stockage dans le condensateur + pertes Joule = puissance fournie par le générateur."},
+    {id:"methode-reponse-libre-rc", type:"méthode", q:"Établir et résoudre l'équation différentielle de la réponse libre d'un RC série (condensateur initialement chargé à $E$, interrupteur fermé à $t=0$)", a:"Loi des mailles : $u_C+u_R=0$, avec $\\tau=RC$ : $$\\dfrac{du_C}{dt}+\\dfrac{u_C}{\\tau}=0$$ Solution (avec $u_C(0)=E$) : $$u_C(t)=E\\exp\\left(-\\dfrac{t}{\\tau}\\right)$$"},
+    {id:"propriete-ci-rl-echelon", type:"propriété", q:"Conditions initiales d'un RL série soumis à un échelon de tension $E$ (bobine sans énergie initiale)", a:"Pour $t<0$ : $i=0$, $u_L=0$.<br>Continuité de l'intensité : $i(0^+)=i(0^-)=0$.<br>Discontinuité de la tension aux bornes de la bobine : $u_L(0^+)=E$."},
+    {id:"methode-equation-i-rl-echelon", type:"méthode", q:"Établir et résoudre l'équation différentielle vérifiée par $i(t)$ pour un RL série soumis à un échelon $E$", a:"Loi des mailles : $u_G=u_L+u_R$ avec $u_L=L\\dfrac{di}{dt}$, d'où (avec $\\tau=L/R$) : $$\\dfrac{di}{dt}+\\dfrac{i}{\\tau}=\\dfrac{E}{R\\tau}$$ Solution (avec $i(0)=0$) : $$i(t)=\\dfrac{E}{R}\\left(1-\\exp\\left(-\\dfrac{t}{\\tau}\\right)\\right)$$"}
+  ]
+});

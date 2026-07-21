@@ -1,0 +1,21 @@
+/* Cours : Physique — E5 : Oscillateurs forcés */
+window.OSCILLO_COURSES = window.OSCILLO_COURSES || [];
+window.OSCILLO_COURSES.push({
+  subject: "physique",
+  id: "e5",
+  name: "Oscillateurs forcés",
+  cards: [
+    {id:"def-notation-complexe", type:"def", q:"Définir le complexe associé à un signal sinusoïdal $x(t)=X_m\\cos(\\omega t+\\varphi)$", a:"$$\\underline{x}(t)=X_m e^{j(\\omega t+\\varphi)}$$ tel que $x(t)=\\text{Re}(\\underline{x}(t))$, $X_m=|\\underline{x}(t)|$ et $\\varphi=\\arg(\\underline{X_m})$. $\\underline{X_m}$ est l'amplitude complexe."},
+    {id:"propriete-somme-signaux-synchrones", type:"propriété", q:"Que vaut la somme de deux signaux sinusoïdaux de même pulsation en notation complexe ?", a:"Si $\\underline{x_1}(t)=\\underline{X_{1m}}e^{j\\omega t}$ et $\\underline{x_2}(t)=\\underline{X_{2m}}e^{j\\omega t}$, alors $\\underline{x}=\\underline{x_1}+\\underline{x_2}$ est associé à un signal de même pulsation $\\omega$, avec $$\\underline{X_m}=\\underline{X_{1m}}+\\underline{X_{2m}}$$"},
+    {id:"formule-derivation-integration-complexe", type:"formule", q:"Traduire la dérivation et l'intégration en notation complexe", a:"$$\\dfrac{\\underline{dx}}{dt}=j\\omega\\times\\underline{x}(t) \\qquad \\underline{\\int x(t)dt}=\\dfrac{\\underline{x}(t)}{j\\omega}$$"},
+    {id:"def-impedance-admittance", type:"def", q:"Définir l'impédance et l'admittance complexes d'un dipôle", a:"$$\\underline{u}=\\underline{Z}\\times\\underline{i} \\qquad \\underline{i}=\\underline{Y}\\times\\underline{u} \\qquad \\underline{Y}=\\dfrac{1}{\\underline{Z}}$$"},
+    {id:"formule-impedances-rlc", type:"formule", q:"Donner les impédances complexes de R, C et L", a:"$$\\underline{Z_R}=R \\qquad \\underline{Z_C}=\\dfrac{1}{jC\\omega} \\qquad \\underline{Z_L}=jL\\omega$$"},
+    {id:"formule-association-impedances", type:"formule", q:"Associations d'impédances en série et en parallèle", a:"Série : $\\underline{Z_{eq}}=\\underline{Z_1}+\\underline{Z_2}$.<br>Parallèle : $\\dfrac{1}{\\underline{Z_{eq}}}=\\dfrac{1}{\\underline{Z_1}}+\\dfrac{1}{\\underline{Z_2}}$, soit $\\underline{Y_{eq}}=\\underline{Y_1}+\\underline{Y_2}$."},
+    {id:"formule-ponts-diviseurs-complexes", type:"formule", q:"Ponts diviseurs de tension et de courant en notation complexe", a:"Tension : $$\\underline{u_1}=\\dfrac{\\underline{Z_1}}{\\underline{Z_1}+\\underline{Z_2}}\\underline{u} \\quad ; \\quad \\underline{u_2}=\\dfrac{\\underline{Z_2}}{\\underline{Z_1}+\\underline{Z_2}}\\underline{u}$$ Courant : $$\\underline{i_1}=\\dfrac{\\underline{Y_1}}{\\underline{Y_1}+\\underline{Y_2}}\\underline{i} \\quad ; \\quad \\underline{i_2}=\\dfrac{\\underline{Y_2}}{\\underline{Y_1}+\\underline{Y_2}}\\underline{i}$$"},
+    {id:"formule-resonance-intensite", type:"formule", q:"Forme canonique de l'amplitude complexe $\\underline{I_m}$ pour la résonance en intensité d'un RLC série", a:"$$\\underline{I_m}=\\dfrac{E}{R\\left(1+jQ\\left(x-\\dfrac{1}{x}\\right)\\right)}$$ avec $\\omega_0=\\dfrac{1}{\\sqrt{LC}}$, $Q=\\dfrac{1}{R}\\sqrt{\\dfrac{L}{C}}$, $x=\\dfrac{\\omega}{\\omega_0}$."},
+    {id:"formule-amplitude-phase-intensite", type:"formule", q:"Amplitude et phase de $i(t)$ à la résonance en intensité", a:"$$|I_m|=\\dfrac{E}{R\\sqrt{1+Q^2\\left(x-\\frac{1}{x}\\right)^2}} \\qquad \\varphi_i-\\varphi_e=-\\arctan\\left(Q\\left(x-\\dfrac{1}{x}\\right)\\right)$$"},
+    {id:"propriete-resonance-intensite", type:"propriété", q:"Caractéristiques de la résonance en intensité d'un RLC série", a:"La résonance a toujours lieu en $\\omega=\\omega_0$ (quel que soit $Q$). $Q$ définit l'acuité de la résonance : largeur $\\Delta\\omega=\\dfrac{\\omega_0}{Q}$."},
+    {id:"formule-resonance-charge", type:"formule", q:"Forme canonique de l'amplitude complexe $\\underline{Q_m}$ pour la résonance en charge d'un RLC série", a:"$$\\underline{Q_m}=\\dfrac{CE}{1+j\\dfrac{x}{Q}-x^2}$$"},
+    {id:"propriete-condition-resonance-charge", type:"propriété", q:"À quelle condition observe-t-on une résonance en charge, et où se situe-t-elle ?", a:"Résonance si $Q>\\dfrac{1}{\\sqrt{2}}$. Dans ce cas, $\\omega_r\\neq\\omega_0$ sauf si $Q\\gg 1$. L'acuité $A=\\dfrac{\\omega_r}{\\Delta\\omega}\\approx Q$ pour $Q\\gg 1$."}
+  ]
+});
