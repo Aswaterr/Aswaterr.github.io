@@ -1,0 +1,18 @@
+/* Cours : Physique — T4 : Changements d'état et équilibres de phase */
+window.OSCILLO_COURSES = window.OSCILLO_COURSES || [];
+window.OSCILLO_COURSES.push({
+  subject: "physique",
+  id: "t4",
+  name: "Changements d'état et équilibres de phase",
+  cards: [
+    {id:"def-changement-etat", type:"def", q:"Caractéristiques générales d'un changement d'état", a:"Masse constante mais volume modifié.<br>Palier de température à pression constante lors d'un changement d'état (tant que les deux phases coexistent)."},
+    {id:"def-diagramme-phase-PT", type:"def", q:"Décrire le diagramme de phase $(P,T)$ : point triple, point critique, courbes d'équilibre", a:"Point triple $T$ : coexistence des trois états (solide, liquide, gaz).<br>Point critique $C$ : au-delà duquel on ne distingue plus liquide et gaz.<br>Courbes d'équilibre : limites entre chaque état (fusion, vaporisation, sublimation)."},
+    {id:"def-vapeur-seche-saturante", type:"def", q:"Différencier vapeur sèche et vapeur saturante", a:"Vapeur sèche : corps pur en phase vapeur en l'absence de phase liquide.<br>Vapeur saturante : corps pur en phase vapeur en présence du même corps pur en phase liquide (équilibre L-V)."},
+    {id:"def-diagramme-clapeyron", type:"def", q:"Décrire le diagramme de Clapeyron $(P,v)$", a:"$v$ : volume massique. Courbe de saturation = courbe de rosée + courbe d'ébullition. Zones : L (liquide pur), V (vapeur sèche), L+V (équilibre liquide-vapeur). Isotherme d'Andrews = courbe à $T$ constante ; sous la courbe de saturation, elle présente un palier de pression à $T$ fixée."},
+    {id:"formule-titre-vapeur", type:"formule", q:"Définir le titre massique en vapeur et le volume massique du système diphasé", a:"$$x=\\dfrac{m_V}{m_{tot}}$$ Volume massique du système : $$v=xv_V+(1-x)v_L$$ $v_V$ : volume massique de la vapeur sèche, $v_L$ : volume massique du liquide pur."},
+    {id:"formule-regle-moments", type:"formule", q:"Énoncer la règle des moments (titre en vapeur, point M sur le segment [A,B])", a:"$$x=\\dfrac{AM}{AB}=\\dfrac{v-v_L}{v_V-v_L}$$"},
+    {id:"formule-enthalpie-changement-etat", type:"formule", q:"Enthalpie massique de changement d'état", a:"Pour un changement d'état $1\\to2$ à température $T_{12}$ (et pression fixée) : $$\\Delta H=ml_{12}$$ ($l_{12}$ : enthalpie massique de changement d'état, en J.kg$^{-1}$), avec $l_{21}=-l_{12}$. Pour un équilibre L-V (vaporisation/liquéfaction partielle) : $$\\Delta H=m_{tot}\\Delta x\\,l_{vap}$$"},
+    {id:"formule-entropie-changement-etat", type:"formule", q:"Entropie massique de changement d'état", a:"Un changement d'état est une transformation réversible, donc : $$\\Delta S=S_{ech}=\\dfrac{Q}{T_{12}}=\\dfrac{\\Delta H}{T_{12}}=\\dfrac{ml_{12}}{T_{12}}$$ avec $s_{12}=\\dfrac{l_{12}}{T_{12}}$ l'entropie massique de changement d'état (en J.K$^{-1}$.kg$^{-1}$)."},
+    {id:"methode-bilan-etats-fictifs", type:"méthode", q:"Méthode : bilan d'enthalpie/entropie entre deux états M et N via un chemin fictif", a:"$H$ et $S$ sont des fonctions d'état : leur variation ne dépend pas du chemin suivi. Pour calculer $\\Delta H_{M\\to N}$ (ou $\\Delta S$) d'une transformation réelle compliquée (ex. traversant un changement d'état) :<br>1. Choisir un chemin fictif $M\\to A\\to B\\to N$ passant par des états de référence bien connus (ex. juste avant/après un changement de phase).<br>2. Décomposer : $\\Delta H=\\Delta H_{MA}+\\Delta H_{AB}+\\Delta H_{BN}$ (idem pour $\\Delta S$), en utilisant $\\Delta H=mc\\Delta T$ pour les étapes de chauffage/refroidissement dans une même phase, et $\\Delta H=ml_{vap}$ (ou fusion) pour les étapes de changement d'état.<br>3. Sommer les contributions pour obtenir le bilan total."}
+  ]
+});
