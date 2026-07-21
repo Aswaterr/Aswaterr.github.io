@@ -554,6 +554,41 @@ function flatCards(filterFn){
 function subjectName(id){ var s = SUBJECTS.find(function(x){ return x.id === id; }); return s ? s.name : id; }
 function subjectCode(id){ var s = SUBJECTS.find(function(x){ return x.id === id; }); return s ? s.code : "??"; }
 
+// Découpe un id de chapitre (ex: "t5", "m15", "si1") en préfixe alphabétique + numéro,
+// pour pouvoir regrouper par sous-thème et trier numériquement (et non alphabétiquement).
+function parseChapterKey(id){
+  var m = /^([a-zA-Z]+)(\d+)$/.exec(id);
+  if(m) return {prefix: m[1].toLowerCase(), num: parseInt(m[2], 10)};
+  return {prefix: String(id).toLowerCase(), num: 0};
+}
+
+// Nom affiché pour un groupe de chapitres (par matière + préfixe). À défaut d'entrée
+// connue, on affiche le préfixe tel quel (ex: nouveau préfixe pas encore répertorié ici).
+var GROUP_LABELS = {
+  "physique:m": "Mécanique",
+  "physique:s": "Ondes et signaux",
+  "physique:e": "Électrocinétique",
+  "physique:o": "Optique",
+  "physique:t": "Thermodynamique"
+};
+// Ordre d'affichage des groupes au sein d'une matière (plus petit = affiché en premier).
+var GROUP_ORDER = {
+  "physique:m": 1,
+  "physique:s": 2,
+  "physique:e": 3,
+  "physique:o": 4,
+  "physique:t": 5
+};
+function groupLabel(subjectId, prefix){
+  var key = subjectId + ":" + prefix;
+  if(GROUP_LABELS.hasOwnProperty(key)) return GROUP_LABELS[key];
+  return prefix.charAt(0).toUpperCase() + prefix.slice(1);
+}
+function groupOrder(subjectId, prefix){
+  var key = subjectId + ":" + prefix;
+  return GROUP_ORDER.hasOwnProperty(key) ? GROUP_ORDER[key] : 999;
+}
+
 var SESSION_STORAGE_KEY = "oscillo-session-v1";
 function saveSessionState(){
   try{
@@ -763,26 +798,53 @@ function openSubject(subjectId){
     reviewLabel.textContent = subjDue > 0 ? "Réviser cette matière (" + subjDue + ")" : "Réviser en avance";
 
     list.innerHTML = "";
-    courses.forEach(function(course){
-      var cCards = flatCards(function(c){ return c.subject === subjectId && c.id === course.id; });
-      var cDue = cCards.filter(function(c){ return isDue(c.gid); }).length;
-      var cMastered = cCards.filter(function(c){ return isMastered(c.gid); }).length;
-      var pct = Math.round((cMastered / course.cards.length) * 100);
 
-      var row = document.createElement("div");
-      row.className = "chapter-row";
-      row.innerHTML =
-        '<span class="ch-code">' + course.id.toUpperCase() + '</span>' +
-        '<div class="ch-info">' +
-          '<div class="ch-name">' + course.name + '</div>' +
-          '<div class="ch-bar-track"><div class="ch-bar-fill" style="width:' + pct + '%"></div></div>' +
-          '<div class="ch-meta"><span>' + course.cards.length + ' cartes</span>' +
-          (cDue > 0 ? '<span class="due">' + cDue + ' à réviser</span>' : '<span>à jour</span>') +
-          '<span>' + pct + '% maîtrisé</span></div>' +
-        '</div>' +
-        '<span class="ch-arrow">→</span>';
-      row.addEventListener("click", function(){ startSession(function(c){ return c.subject === subjectId && c.id === course.id; }); });
-      list.appendChild(row);
+    // Regroupe les chapitres par sous-thème (préfixe alphabétique de l'id, ex: "t5" -> "t")
+    // et trie numériquement au sein de chaque groupe, pour éviter le tri alphabétique brut
+    // (qui mettrait par exemple "t10" avant "t2").
+    var groups = {};
+    courses.forEach(function(course){
+      var parsed = parseChapterKey(course.id);
+      if(!groups[parsed.prefix]) groups[parsed.prefix] = [];
+      groups[parsed.prefix].push({course: course, num: parsed.num});
+    });
+    var prefixes = Object.keys(groups).sort(function(a,b){
+      return groupOrder(subjectId, a) - groupOrder(subjectId, b);
+    });
+    var multiGroup = prefixes.length > 1;
+
+    prefixes.forEach(function(prefix){
+      var items = groups[prefix].sort(function(a,b){ return a.num - b.num; });
+
+      if(multiGroup){
+        var header = document.createElement("div");
+        header.className = "section-label";
+        header.textContent = groupLabel(subjectId, prefix);
+        list.appendChild(header);
+      }
+
+      items.forEach(function(item){
+        var course = item.course;
+        var cCards = flatCards(function(c){ return c.subject === subjectId && c.id === course.id; });
+        var cDue = cCards.filter(function(c){ return isDue(c.gid); }).length;
+        var cMastered = cCards.filter(function(c){ return isMastered(c.gid); }).length;
+        var pct = Math.round((cMastered / course.cards.length) * 100);
+
+        var row = document.createElement("div");
+        row.className = "chapter-row";
+        row.innerHTML =
+          '<span class="ch-code">' + course.id.toUpperCase() + '</span>' +
+          '<div class="ch-info">' +
+            '<div class="ch-name">' + course.name + '</div>' +
+            '<div class="ch-bar-track"><div class="ch-bar-fill" style="width:' + pct + '%"></div></div>' +
+            '<div class="ch-meta"><span>' + course.cards.length + ' cartes</span>' +
+            (cDue > 0 ? '<span class="due">' + cDue + ' à réviser</span>' : '<span>à jour</span>') +
+            '<span>' + pct + '% maîtrisé</span></div>' +
+          '</div>' +
+          '<span class="ch-arrow">→</span>';
+        row.addEventListener("click", function(){ startSession(function(c){ return c.subject === subjectId && c.id === course.id; }); });
+        list.appendChild(row);
+      });
     });
   }
 
