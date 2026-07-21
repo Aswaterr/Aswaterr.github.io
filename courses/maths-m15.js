@@ -2,7 +2,7 @@
 window.OSCILLO_COURSES = window.OSCILLO_COURSES || [];
 window.OSCILLO_COURSES.push({
   subject: "maths",
-  id: "m15,
+  id: "m15",
   name: "Espaces vectoriels et applications linéaires",
   cards: [
     {id:"propriete-operations-vecteurs", type:"propriété", q:"Propriétés de l'addition et de la multiplication par un scalaire sur les vecteurs de $\\mathbb{K}^n$", a:"Addition : commutative, associative, élément neutre $\\vec{0}$, tout vecteur $u$ admet un opposé $-u$.<br>Multiplication par un scalaire : $1\\cdot u=u$, $\\lambda(\\mu u)=(\\lambda\\mu)u$, $(\\lambda+\\mu)u=\\lambda u+\\mu u$, $\\lambda(u+v)=\\lambda u+\\lambda v$. Ces propriétés motivent la définition axiomatique d'espace vectoriel."},
