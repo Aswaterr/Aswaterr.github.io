@@ -363,9 +363,35 @@ function inferGithubRepo(){
   return { owner: owner, repo: host };
 }
 
+// Cache local (par dépôt) de la liste des fichiers de courses/, utilisé avec
+// des requêtes conditionnelles (ETag) pour ne quasiment jamais consommer le
+// quota de l'API GitHub (60 requêtes/heure/IP sans authentification).
+var COURSES_CACHE_PREFIX = "oscillo-courses-cache-";
+
+function getCoursesCache(repoInfo){
+  try{
+    var raw = localStorage.getItem(COURSES_CACHE_PREFIX + repoInfo.owner + "/" + repoInfo.repo);
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){
+    return null; // localStorage indisponible (navigation privée, quota, etc.)
+  }
+}
+
+function setCoursesCache(repoInfo, etag, files){
+  try{
+    localStorage.setItem(
+      COURSES_CACHE_PREFIX + repoInfo.owner + "/" + repoInfo.repo,
+      JSON.stringify({ etag: etag, files: files, savedAt: Date.now() })
+    );
+  }catch(e){ /* pas grave si on ne peut pas écrire, on refera juste une requête complète la prochaine fois */ }
+}
+
 // Découvre dynamiquement les fichiers .js présents dans courses/ via l'API GitHub,
-// puis les charge tous. Se dégrade proprement (aucun cours chargé) si l'API
-// échoue (hors ligne, quota dépassé, test en local hors GitHub Pages, etc).
+// puis les charge tous. Utilise une requête conditionnelle (If-None-Match / ETag) :
+// si le dossier n'a pas changé depuis la dernière visite, GitHub répond 304 et cette
+// réponse est gratuite (ne compte pas dans le quota de 60 requêtes/heure). Si l'API
+// échoue tout de même (quota déjà épuisé, hors ligne...), on retombe sur le cache
+// local s'il existe, pour que l'appli continue de fonctionner.
 function discoverAndLoadCourses(){
   var repoInfo = inferGithubRepo();
   if(!repoInfo){
@@ -373,19 +399,37 @@ function discoverAndLoadCourses(){
     return Promise.resolve();
   }
   var apiUrl = "https://api.github.com/repos/" + repoInfo.owner + "/" + repoInfo.repo + "/contents/courses";
-  return fetch(apiUrl)
+  var cached = getCoursesCache(repoInfo);
+  var headers = {};
+  if(cached && cached.etag){ headers["If-None-Match"] = cached.etag; }
+
+  return fetch(apiUrl, { headers: headers })
     .then(function(res){
+      if(res.status === 304 && cached){
+        return cached.files; // Rien n'a changé : réponse gratuite, on réutilise le cache.
+      }
       if(!res.ok) throw new Error("GitHub API a répondu " + res.status);
-      return res.json();
-    })
-    .then(function(files){
-      var jsFiles = files
-        .filter(function(f){ return f.type === "file" && /\.js$/i.test(f.name); })
-        .map(function(f){ return "courses/" + f.name; });
-      return Promise.all(jsFiles.map(loadScript));
+      var remaining = res.headers.get("X-RateLimit-Remaining");
+      if(remaining !== null){ console.info("Quota API GitHub restant : " + remaining + "/60"); }
+      var etag = res.headers.get("ETag");
+      return res.json().then(function(files){
+        var jsFiles = files
+          .filter(function(f){ return f.type === "file" && /\.js$/i.test(f.name); })
+          .map(function(f){ return "courses/" + f.name; });
+        setCoursesCache(repoInfo, etag, jsFiles);
+        return jsFiles;
+      });
     })
     .catch(function(err){
       console.warn("Auto-détection des cours échouée :", err.message);
+      if(cached && cached.files && cached.files.length){
+        console.warn("Utilisation de la liste de cours mise en cache (peut-être légèrement obsolète).");
+        return cached.files;
+      }
+      return [];
+    })
+    .then(function(jsFiles){
+      return Promise.all((jsFiles || []).map(loadScript));
     });
 }
 
