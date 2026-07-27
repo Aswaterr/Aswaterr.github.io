@@ -2,7 +2,7 @@
 window.OSCILLO_COURSES = window.OSCILLO_COURSES || [];
 window.OSCILLO_COURSES.push({
   subject: "maths",
-  id: "m11",
+  id: "m6",
   name: "Équations différentielles du premier ordre",
   cards: [
     {id:"def-edl1", type:"def", q:"Définir une équation différentielle linéaire du premier ordre (EDL1), le second membre et une solution", a:"Une EDL1 est une équation du type $$y'(x)+a(x)y(x)=b(x)$$ où $a$ et $b$ sont deux fonctions continues sur un intervalle $I$, $y$ est une fonction inconnue, et $b$ s'appelle le second membre. Une solution de l'EDL1 sur $I$ est une fonction $S:I\\to\\mathbb{R}$ dérivable sur $I$ telle que $$\\forall x\\in I,\\ S'(x)+a(x)S(x)=b(x)$$"},
