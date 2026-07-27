@@ -2,7 +2,7 @@
 window.OSCILLO_COURSES = window.OSCILLO_COURSES || [];
 window.OSCILLO_COURSES.push({
   subject: "maths",
-  id: "m10",
+  id: "m5",
   name: "Calcul intégral",
   cards: [
     {id:"propriete-ensemble-primitives", type:"propriété", q:"Énoncer la propriété de l'ensemble des primitives d'une fonction $f$ continue sur $I$ (à partir d'une primitive $P$)", a:"Si $I$ est un intervalle, $f:I\\to\\mathbb{K}$ continue sur $I$, $P:I\\to\\mathbb{K}$ une primitive de $f$ sur $I$, alors $$\\{F \\mid F \\text{ est une primitive de } f \\text{ sur } I\\}=\\{x\\mapsto P(x)+C \\mid C\\in\\mathbb{K}\\}$$ Autrement dit : toute primitive de $f$ sur $I$ est de cette forme ET toute fonction de cette forme est une primitive de $f$ sur $I$."},
