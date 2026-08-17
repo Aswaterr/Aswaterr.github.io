@@ -1,0 +1,42 @@
+/* Cours : Mathématiques — Ch.24 : Algèbre linéaire VI - Espaces préhilbertiens réels */
+window.OSCILLO_COURSES = window.OSCILLO_COURSES || [];
+window.OSCILLO_COURSES.push({
+  subject: "maths",
+  id: "m24",
+  name: "Algèbre linéaire VI : espaces préhilbertiens réels",
+  cards: [
+    {id:"def-produit-scalaire", type:"def", q:"Définir un produit scalaire", a:"Forme bilinéaire symétrique définie positive $\\langle\\cdot,\\cdot\\rangle : E\\times E\\to\\mathbb R$ : bilinéaire, symétrique ($\\langle x,y\\rangle=\\langle y,x\\rangle$), et $\\langle x,x\\rangle \\ge 0$ avec égalité ssi $x=0$."},
+    {id:"def-espace-prehilbertien", type:"def", q:"Définir un espace préhilbertien réel", a:"$\\mathbb R$-ev muni d'un produit scalaire."},
+    {id:"def-espace-euclidien", type:"def", q:"Définir un espace euclidien", a:"Espace préhilbertien réel de dimension finie."},
+    {id:"def-produit-scalaire-canonique-Rn", type:"def", q:"Définir le produit scalaire canonique sur $\\mathbb R^n$", a:"$$\\langle x,y\\rangle = \\sum_{i=1}^n x_iy_i$$"},
+    {id:"def-norme-associee", type:"def", q:"Définir la norme associée à un produit scalaire", a:"$$\\|x\\| = \\sqrt{\\langle x,x\\rangle}$$"},
+    {id:"def-distance-prehilbertien", type:"def", q:"Définir la distance dans un espace préhilbertien", a:"$d(x,y) = \\|x-y\\|$"},
+    {id:"def-vecteur-unitaire", type:"def", q:"Définir un vecteur unitaire", a:"Vecteur $u$ tel que $\\|u\\|=1$."},
+    {id:"def-vecteurs-orthogonaux", type:"def", q:"Définir vecteurs et sev orthogonaux", a:"$x,y$ orthogonaux si $\\langle x,y\\rangle=0$. $F,G$ orthogonaux si tout vecteur de $F$ est orthogonal à tout vecteur de $G$."},
+    {id:"def-orthogonal-sev", type:"def", q:"Définir l'orthogonal d'un sev", a:"$F^\\perp = \\{x\\in E \\mid \\forall y\\in F, \\langle x,y\\rangle=0\\}$, sev de $E$."},
+    {id:"def-famille-orthogonale-orthonormee", type:"def", q:"Définir famille orthogonale, famille orthonormée", a:"Orthogonale : vecteurs deux à deux orthogonaux. Orthonormée (orthonormale) : orthogonale et tous unitaires."},
+    {id:"def-symbole-kronecker", type:"def", q:"Définir le symbole de Kronecker", a:"$\\delta_{ij} = 1$ si $i=j$, $0$ sinon. Une famille $(e_i)$ est orthonormée ssi $\\langle e_i,e_j\\rangle=\\delta_{ij}$."},
+    {id:"def-algo-gram-schmidt", type:"def", q:"Décrire l'algorithme d'orthonormalisation de Gram-Schmidt", a:"À partir d'une base $(u_1,\\dots,u_n)$, construit une base orthonormée $(e_1,\\dots,e_n)$ telle que $\\mathrm{Vect}(e_1,\\dots,e_k)=\\mathrm{Vect}(u_1,\\dots,u_k)$ pour tout $k$, en orthogonalisant puis normant successivement chaque vecteur."},
+    {id:"def-base-orthogonale-orthonormee", type:"def", q:"Définir base orthogonale, base orthonormée", a:"Base orthogonale : famille orthogonale qui est une base. Base orthonormée : famille orthonormée qui est une base."},
+    {id:"def-projete-orthogonal", type:"def", q:"Définir le projeté orthogonal sur un sev", a:"$p_F(x)$ : unique élément de $F$ tel que $x-p_F(x) \\in F^\\perp$ (existe si $F$ de dimension finie ou admet un supplémentaire orthogonal)."},
+    {id:"def-vecteur-normal-hyperplan", type:"def", q:"Définir un vecteur normal à un hyperplan", a:"Vecteur $n$ orthogonal à tous les vecteurs de l'hyperplan $H$ (engendre $H^\\perp$, droite vectorielle)."},
+    {id:"def-meilleure-approximation", type:"def", q:"Définir la meilleure approximation d'un vecteur dans un sev", a:"$p_F(x)$ minimise la distance $\\|x-y\\|$ pour $y$ parcourant $F$ : $\\|x-p_F(x)\\| = \\min_{y\\in F} \\|x-y\\|$."},
+    {id:"prop-norme-euclidienne-associee", type:"propriété", q:"Propriétés de la norme euclidienne", a:"$\\|x\\|\\ge0$, $\\|x\\|=0\\iff x=0$, $\\|\\lambda x\\|=|\\lambda|\\|x\\|$, inégalité triangulaire $\\|x+y\\|\\le\\|x\\|+\\|y\\|$."},
+    {id:"inegalite-cauchy-schwarz", type:"propriété", q:"Inégalité de Cauchy-Schwarz", a:"$$|\\langle x,y\\rangle| \\le \\|x\\|\\,\\|y\\|$$ avec égalité ssi $x,y$ colinéaires."},
+    {id:"inegalite-triangulaire-norme", type:"propriété", q:"Inégalité triangulaire (norme)", a:"$$\\|x+y\\| \\le \\|x\\|+\\|y\\|$$ avec égalité ssi $x,y$ positivement colinéaires."},
+    {id:"formule-identite-remarquable-norme", type:"formule", q:"Identité remarquable : $\\|x+y\\|^2$", a:"$$\\|x+y\\|^2 = \\|x\\|^2+2\\langle x,y\\rangle+\\|y\\|^2$$"},
+    {id:"formule-identite-parallelogramme", type:"formule", q:"Identité du parallélogramme", a:"$$\\|x+y\\|^2 + \\|x-y\\|^2 = 2\\|x\\|^2+2\\|y\\|^2$$"},
+    {id:"formule-polarisation", type:"formule", q:"Formule de polarisation", a:"$$\\langle x,y\\rangle = \\dfrac{1}{2}\\left(\\|x+y\\|^2-\\|x\\|^2-\\|y\\|^2\\right) = \\dfrac14\\left(\\|x+y\\|^2-\\|x-y\\|^2\\right)$$"},
+    {id:"prop-orthogonale-implique-libre", type:"propriété", q:"Famille orthogonale de vecteurs non nuls $\\Rightarrow$ libre", a:"Toute famille orthogonale de vecteurs non nuls est linéairement indépendante (libre)."},
+    {id:"thm-pythagore", type:"propriété", q:"Théorème de Pythagore", a:"$x \\perp y \\iff \\|x+y\\|^2 = \\|x\\|^2+\\|y\\|^2$ (généralisation à une famille orthogonale : $\\|\\sum x_i\\|^2 = \\sum \\|x_i\\|^2$)."},
+    {id:"thm-gram-schmidt", type:"propriété", q:"Théorème de Gram-Schmidt", a:"Tout espace préhilbertien de dimension finie admet une base orthonormée, construite à partir de n'importe quelle base via le procédé de Gram-Schmidt."},
+    {id:"thm-base-orthonormee-incomplete", type:"propriété", q:"Théorème de la base orthonormée incomplète", a:"Toute famille orthonormée peut être complétée en une base orthonormée de l'espace (analogue orthonormé du théorème de la base incomplète)."},
+    {id:"prop-coordonnees-norme-bon", type:"propriété", q:"Coordonnées et norme dans une base orthonormée (b.o.n.)", a:"Si $(e_i)$ b.o.n. et $x=\\sum x_ie_i$ : $x_i = \\langle x,e_i\\rangle$, $\\|x\\|^2 = \\sum x_i^2$, $\\langle x,y\\rangle = \\sum x_iy_i$."},
+    {id:"prop-supplementaire-orthogonal", type:"propriété", q:"Supplémentaire orthogonal d'un sev", a:"En dimension finie, tout sev $F$ vérifie $E = F \\oplus F^\\perp$ (le supplémentaire orthogonal existe toujours et est unique)."},
+    {id:"formule-projete-orthogonal-bon", type:"formule", q:"Expression du projeté orthogonal $\\pi_F(x)$ via une base orthonormée de $F$", a:"Si $(e_1,\\dots,e_k)$ base orthonormée de $F$ : $$\\pi_F(x) = \\sum_{i=1}^k \\langle x,e_i\\rangle e_i$$"},
+    {id:"formule-projete-orthogonal-orthogonale", type:"formule", q:"Expression du projeté orthogonal via une base orthogonale (non normée) de $F$", a:"Si $(u_1,\\dots,u_k)$ base orthogonale (non unitaire) de $F$ : $$\\pi_F(x) = \\sum_{i=1}^k \\dfrac{\\langle x,u_i\\rangle}{\\|u_i\\|^2} u_i$$"},
+    {id:"prop-equation-hyperplan-normal", type:"propriété", q:"Équation d'un hyperplan via un vecteur normal", a:"Pour $n$ vecteur normal à $H$, $H = \\{x \\mid \\langle x,n\\rangle = 0\\}$ (ou $=c$ pour un hyperplan affine)."},
+    {id:"prop-distance-norme-projete", type:"propriété", q:"Distance d'un point à un sev via le projeté orthogonal", a:"$$d(x,F) = \\|x-\\pi_F(x)\\| = \\min_{y\\in F}\\|x-y\\|$$"},
+    {id:"methode-gram-schmidt-procede", type:"méthode", q:"Procédé d'orthonormalisation de Gram-Schmidt (méthode pratique)", a:"$e_1 = u_1/\\|u_1\\|$. Pour $k\\ge2$ : $v_k = u_k - \\sum_{i<k} \\langle u_k,e_i\\rangle e_i$ (on retire les projections sur les $e_i$ précédents), puis $e_k = v_k/\\|v_k\\|$."}
+  ]
+});

@@ -1,0 +1,40 @@
+/* Cours : Mathématiques — Ch.7 : Les nombres complexes */
+window.OSCILLO_COURSES = window.OSCILLO_COURSES || [];
+window.OSCILLO_COURSES.push({
+  subject: "maths",
+  id: "m7",
+  name: "Les nombres complexes",
+  cards: [
+    {id:"def-ensemble-c", type:"def", q:"Définir $\\mathbb C$, partie réelle, partie imaginaire", a:"$\\mathbb C = \\{a+ib \\mid a,b\\in\\mathbb R\\}$ avec $i^2=-1$. Pour $z=a+ib$ : $\\mathrm{Re}(z)=a$, $\\mathrm{Im}(z)=b$ (réel, pas $ib$)."},
+    {id:"def-imaginaire-pur", type:"def", q:"Définir imaginaire pur", a:"$z$ est imaginaire pur si $\\mathrm{Re}(z)=0$, c'est-à-dire $z=ib$, $b\\in\\mathbb R$."},
+    {id:"def-addition-multiplication-c", type:"def", q:"Addition et multiplication dans $\\mathbb C$", a:"$(a+ib)+(c+id)=(a+c)+i(b+d)$&lt;br&gt;$(a+ib)(c+id)=(ac-bd)+i(ad+bc)$"},
+    {id:"def-image-affixe", type:"def", q:"Définir image et affixe (plan complexe)", a:"À $z=a+ib$ on associe le point $M(a,b)$ : image de $z$. Réciproquement, $z$ est l'affixe de $M$."},
+    {id:"def-conjugue-module", type:"def", q:"Définir conjugué et module", a:"Conjugué : $\\bar z = a-ib$. Module : $|z| = \\sqrt{a^2+b^2} = \\sqrt{z\\bar z}$."},
+    {id:"def-groupe-U-Un-j", type:"def", q:"Définir $\\mathbb U$, $\\mathbb U_n$, $j$", a:"$\\mathbb U = \\{z\\in\\mathbb C \\mid |z|=1\\}$ (cercle unité).&lt;br&gt;$\\mathbb U_n = \\{z\\in\\mathbb C \\mid z^n=1\\}$ (racines $n$-ièmes de l'unité).&lt;br&gt;$j = e^{2i\\pi/3}$, racine cubique de l'unité, avec $1+j+j^2=0$."},
+    {id:"def-notation-exponentielle", type:"def", q:"Définir la notation exponentielle $e^{i\\theta}$", a:"$e^{i\\theta} = \\cos\\theta + i\\sin\\theta$ (formule d'Euler). Pour $z\\ne0$ : $z=|z|e^{i\\theta}$."},
+    {id:"def-forme-algebrique-trigo-exp", type:"def", q:"Distinguer forme algébrique, trigonométrique, exponentielle", a:"Algébrique : $z=a+ib$.&lt;br&gt;Trigonométrique : $z=r(\\cos\\theta+i\\sin\\theta)$.&lt;br&gt;Exponentielle : $z=re^{i\\theta}$, avec $r=|z|$."},
+    {id:"def-argument", type:"def", q:"Définir l'argument (principal) d'un complexe non nul", a:"$\\arg(z)$ est l'angle $\\theta$ tel que $z=|z|e^{i\\theta}$, défini modulo $2\\pi$. L'argument principal est dans $]-\\pi,\\pi]$."},
+    {id:"def-racines-n-iemes", type:"def", q:"Définir les racines $n$-ièmes d'un complexe $a$", a:"Solutions de $z^n=a$. Si $a=re^{i\\theta}$, les racines sont $z_k = r^{1/n}e^{i(\\theta+2k\\pi)/n}$, $k=0,\\dots,n-1$."},
+    {id:"def-derivation-integration-complexe", type:"def", q:"Dérivation/intégration d'une fonction complexe d'une variable réelle", a:"Pour $f(t)=g(t)+ih(t)$, on dérive/intègre $g$ et $h$ séparément : $f'=g'+ih'$, $\\int f = \\int g + i\\int h$."},
+    {id:"prop-produit-modules", type:"propriété", q:"Propriétés du module (produit, quotient, puissance)", a:"$|zz'|=|z||z'|$, $\\left|\\dfrac{z}{z'}\\right|=\\dfrac{|z|}{|z'|}$, $|z^n|=|z|^n$"},
+    {id:"prop-identite-remarquable-c", type:"propriété", q:"Identités remarquables dans $\\mathbb C$", a:"Mêmes identités que dans $\\mathbb R$ : $(a+b)^2=a^2+2ab+b^2$, $a^2-b^2=(a-b)(a+b)$, valables car $\\mathbb C$ est un corps commutatif."},
+    {id:"prop-regle-produit-nul", type:"propriété", q:"Règle du produit nul dans $\\mathbb C$", a:"$zz'=0 \\iff z=0 \\text{ ou } z'=0$ ($\\mathbb C$ est intègre)."},
+    {id:"prop-image-operations-geometrie", type:"propriété", q:"Interprétation géométrique de $z-z'$ et $z+z'$", a:"$|z-z'|$ = distance entre les images de $z$ et $z'$. $z+z'$ correspond à la translation vectorielle des affixes."},
+    {id:"prop-inegalite-triangulaire-c", type:"propriété", q:"Inégalité triangulaire dans $\\mathbb C$", a:"$|z+z'| \\le |z|+|z'|$, avec égalité ssi $z,z'$ positivement liés (même argument, ou l'un est nul)."},
+    {id:"prop-racines-Un", type:"propriété", q:"Propriétés de $\\mathbb U_n$ (racines n-ièmes de l'unité)", a:"$\\mathbb U_n = \\{e^{2ik\\pi/n}, k=0,\\dots,n-1\\}$, forme un groupe pour la multiplication, réparties régulièrement sur le cercle unité (polygone régulier)."},
+    {id:"formule-euler", type:"formule", q:"Formules d'Euler", a:"$\\cos\\theta = \\dfrac{e^{i\\theta}+e^{-i\\theta}}{2}$&lt;br&gt;$\\sin\\theta = \\dfrac{e^{i\\theta}-e^{-i\\theta}}{2i}$"},
+    {id:"prop-module-argument-produit", type:"propriété", q:"Argument d'un produit, d'un quotient, d'une puissance", a:"$\\arg(zz') \\equiv \\arg z+\\arg z' \\,[2\\pi]$&lt;br&gt;$\\arg(z/z') \\equiv \\arg z-\\arg z' \\,[2\\pi]$&lt;br&gt;$\\arg(z^n) \\equiv n\\arg z \\,[2\\pi]$"},
+    {id:"formule-moivre", type:"formule", q:"Formule de De Moivre", a:"$(\\cos\\theta+i\\sin\\theta)^n = \\cos(n\\theta)+i\\sin(n\\theta)$, soit $(e^{i\\theta})^n = e^{in\\theta}$"},
+    {id:"prop-egalite-arguments", type:"propriété", q:"Égalité de deux arguments : condition", a:"Deux complexes non nuls $z,z'$ ont même argument ssi $z=\\lambda z'$ avec $\\lambda \\in \\mathbb R_+^*$ (colinéaires positivement)."},
+    {id:"prop-affixe-vecteur", type:"propriété", q:"Affixe d'un vecteur, colinéarité, alignement", a:"Affixe de $\\vec{AB}$ : $z_B-z_A$. $A,B,C$ alignés $\\iff \\dfrac{z_C-z_A}{z_B-z_A}\\in\\mathbb R$. Vecteurs colinéaires $\\iff$ quotient des affixes réel."},
+    {id:"formule-binome-newton", type:"formule", q:"Formule du binôme de Newton", a:"$$(a+b)^n = \\sum_{k=0}^n \\binom{n}{k} a^k b^{n-k}$$"},
+    {id:"formule-pascal", type:"formule", q:"Formule de Pascal", a:"$$\\binom{n}{k} + \\binom{n}{k+1} = \\binom{n+1}{k+1}$$"},
+    {id:"prop-somme-coefficients-binomiaux", type:"propriété", q:"Relations sur les coefficients binomiaux", a:"$\\binom{n}{k}=\\binom{n}{n-k}$ (symétrie). $\\sum_{k=0}^n \\binom{n}{k} = 2^n$."},
+    {id:"methode-forme-algebrique-quotient", type:"méthode", q:"Méthode : mettre un quotient sous forme algébrique", a:"Multiplier numérateur et dénominateur par le conjugué du dénominateur pour le rendre réel."},
+    {id:"methode-factorisation-eitheta", type:"méthode", q:"Méthode de factorisation de l'angle moitié : $e^{i\\theta}\\pm e^{i\\theta'}$ et $1\\pm e^{i\\theta}$", a:"Factoriser par l'exponentielle de l'angle moyen (arc moitié) :&lt;br&gt;$e^{i\\theta}+e^{i\\theta'} = 2\\cos\\left(\\frac{\\theta-\\theta'}{2}\\right)e^{i\\frac{\\theta+\\theta'}{2}}$&lt;br&gt;$1+e^{i\\theta} = 2\\cos(\\theta/2)e^{i\\theta/2}$&lt;br&gt;$1-e^{i\\theta} = -2i\\sin(\\theta/2)e^{i\\theta/2}$"},
+    {id:"methode-solution-particuliere-zn-a", type:"méthode", q:"Méthode : trouver les solutions de $z^n=a$ ($a\\in\\mathbb C^*$)", a:"Écrire $a=re^{i\\theta}$, trouver une solution particulière $z_0=r^{1/n}e^{i\\theta/n}$, puis toutes les solutions sont $z_0 \\omega$ pour $\\omega\\in\\mathbb U_n$."},
+    {id:"methode-resolution-equadegre2-c", type:"méthode", q:"Méthode : résoudre $az^2+bz+c=0$ dans $\\mathbb C$ (via $x+iy$)", a:"Pour un discriminant complexe $\\Delta$ dont on cherche une racine carrée $\\delta=x+iy$ : résoudre $\\delta^2=\\Delta$ en identifiant $x^2-y^2=\\mathrm{Re}(\\Delta)$, $x^2+y^2=|\\Delta|$, et $2xy = \\mathrm{Im}(\\Delta)$ pour le signe."},
+    {id:"methode-linearisation-trigo", type:"méthode", q:"Méthode : (De)-linéariser des expressions trigonométriques", a:"Linéariser : exprimer $\\cos^n,\\sin^n$ via les formules d'Euler puis binôme de Newton, regrouper les termes conjugués. Délinéariser : l'inverse, réexprimer une somme en puissance via les formules de factorisation."},
+    {id:"methode-somme-cos-kteta", type:"méthode", q:"Méthode : calculer $\\sum_{k=0}^n \\cos(k\\theta)$ et $\\sum_{k=0}^n \\sin(k\\theta)$", a:"Passer par la somme géométrique complexe $\\sum_{k=0}^n e^{ik\\theta} = \\sum (e^{i\\theta})^k$, factoriser par l'arc moitié, puis prendre partie réelle (cos) ou imaginaire (sin)."}
+  ]
+});
