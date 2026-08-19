@@ -1,7 +1,7 @@
 /* Cours : Anglais — Vocabulaire de société : noms et verbes concrets */
 window.OSCILLO_COURSES = window.OSCILLO_COURSES || [];
 window.OSCILLO_COURSES.push({
-  subject: "english",
+  subject: "anglais",
   id: "t7",
   name: "Vocabulaire de société : noms et verbes concrets",
   cards: [
