@@ -1,7 +1,7 @@
 /* Cours : Anglais — Vocabulaire de société : argumenter et qualifier */
 window.OSCILLO_COURSES = window.OSCILLO_COURSES || [];
 window.OSCILLO_COURSES.push({
-  subject: "english",
+  subject: "anglais",
   id: "t6",
   name: "Vocabulaire de société : argumenter et qualifier",
   cards: [
