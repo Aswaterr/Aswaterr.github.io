@@ -1,7 +1,7 @@
 /* Cours : Anglais — Vocabulaire de société : verbes et expressions verbales */
 window.OSCILLO_COURSES = window.OSCILLO_COURSES || [];
 window.OSCILLO_COURSES.push({
-  subject: "english",
+  subject: "anglais",
   id: "t5",
   name: "Vocabulaire de société : verbes et expressions verbales",
   cards: [
