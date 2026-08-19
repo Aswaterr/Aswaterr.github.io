@@ -1,7 +1,7 @@
 /* Cours : Anglais — Vocabulaire de société : structures et noms abstraits */
 window.OSCILLO_COURSES = window.OSCILLO_COURSES || [];
 window.OSCILLO_COURSES.push({
-  subject: "english",
+  subject: "anglais",
   id: "t4",
   name: "Vocabulaire de société : structures et noms abstraits",
   cards: [
