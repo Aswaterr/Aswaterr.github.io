@@ -1,0 +1,24 @@
+/* Cours : Chimie — Ch.2 : Structure des molécules et des ions polyatomiques */
+window.OSCILLO_COURSES = window.OSCILLO_COURSES || [];
+window.OSCILLO_COURSES.push({
+  subject: "chimie",
+  id: "c2",
+  name: "Structure des molécules et des ions polyatomiques",
+  cards: [
+    {id:"def-configuration-electronique", type:"def", q:"Définir configuration électronique", a:"Répartition des électrons d'un atome dans les différentes sous-couches (orbitales atomiques) : notée $1s^2 2s^2 2p^6\\dots$"},
+    {id:"prop-regle-klechkowski", type:"propriété", q:"Règle de Klechkowski (ordre de remplissage)", a:"Les sous-couches se remplissent par ordre croissant de $(n+\\ell)$, et à $(n+\\ell)$ égal, par $n$ croissant. Ordre : $1s,2s,2p,3s,3p,4s,3d,4p,5s,4d\\dots$"},
+    {id:"prop-principe-pauli", type:"propriété", q:"Principe d'exclusion de Pauli", a:"Deux électrons d'un même atome ne peuvent avoir les 4 mêmes nombres quantiques ; une case quantique contient au plus 2 électrons de spins opposés."},
+    {id:"prop-regle-hund", type:"propriété", q:"Règle de Hund", a:"À l'état fondamental, dans une sous-couche partiellement remplie, les électrons occupent le maximum d'orbitales avant de s'apparier, avec des spins parallèles."},
+    {id:"def-schema-lewis", type:"def", q:"Définir le schéma de Lewis", a:"Représentation d'une molécule montrant tous les électrons de valence : doublets liants (traits entre atomes), doublets non liants (paires sur un atome), et éventuellement électrons célibataires."},
+    {id:"prop-regle-octet-duet", type:"propriété", q:"Règle de l'octet (et du duet)", a:"Les atomes (autres que H, He) tendent à s'entourer de 8 électrons de valence (octet) en formant des liaisons ; H et He tendent vers 2 électrons (duet)."},
+    {id:"def-charge-formelle", type:"def", q:"Définir la charge formelle", a:"$$CF = n_e(\\text{atome isolé}) - n_e(\\text{non liants}) - \\dfrac{n_e(\\text{liants})}{2}$$ Permet de choisir la meilleure structure de Lewis parmi plusieurs possibles (charges formelles minimales, cohérentes avec l'électronégativité)."},
+    {id:"def-mesomerie", type:"def", q:"Définir la mésomérie et les formes limites", a:"Lorsqu'une molécule ne peut être décrite par une seule structure de Lewis, on utilise plusieurs formes limites (mésomères) reliées par des flèches courbes ; la structure réelle est un hybride de résonance, plus stable que chaque forme limite."},
+    {id:"methode-vsepr", type:"méthode", q:"Méthode VSEPR : déterminer la géométrie d'une molécule", a:"1) Compter le nombre de doublets liants ($X$) et non liants ($E$) autour de l'atome central.&lt;br&gt;2) Noter $AX_nE_m$.&lt;br&gt;3) Les doublets se répartissent pour minimiser les répulsions (géométrie de base selon $n+m$).&lt;br&gt;4) La géométrie finale de la molécule ne tient compte que des doublets liants $X$ (les $E$ modifient les angles mais ne sont pas \"vus\")."},
+    {id:"prop-geometries-vsepr", type:"propriété", q:"Géométries VSEPR usuelles (AX₂, AX₃, AX₄, AX₂E, AX₃E, AX₂E₂)", a:"$AX_2$ : linéaire (180°)&lt;br&gt;$AX_3$ : trigonale plane (120°)&lt;br&gt;$AX_4$ : tétraédrique (109,5°)&lt;br&gt;$AX_2E$ : coudée (angle &lt;120°)&lt;br&gt;$AX_3E$ : pyramidale (angle &lt;109,5°)&lt;br&gt;$AX_2E_2$ : coudée (angle &lt;109,5°, ex. H₂O)"},
+    {id:"def-electronegativite", type:"def", q:"Définir l'électronégativité", a:"Capacité d'un atome à attirer vers lui les électrons d'une liaison covalente. Augmente de gauche à droite et de bas en haut dans le tableau périodique (F est l'élément le plus électronégatif)."},
+    {id:"def-liaison-covalente-polarisee", type:"def", q:"Définir liaison covalente polarisée et moment dipolaire de liaison", a:"Liaison polarisée : mise en commun inégale des électrons entre deux atomes d'électronégativités différentes, créant $\\delta^+$ et $\\delta^-$. Moment dipolaire : $\\vec\\mu = q\\vec{AB}$, orienté du pôle $-$ vers le pôle $+$, en Debye (D)."},
+    {id:"prop-moment-dipolaire-molecule", type:"propriété", q:"Moment dipolaire d'une molécule polyatomique", a:"$\\vec\\mu_{molécule}$ est la somme vectorielle des moments dipolaires de liaison ; peut être nul si la molécule est symétrique (ex. CO₂ linéaire) même si les liaisons sont polarisées."},
+    {id:"def-liaison-hydrogene", type:"def", q:"Définir la liaison hydrogène", a:"Interaction attractive entre un atome d'hydrogène lié à un atome très électronégatif (O, N, F) et un doublet non liant d'un atome électronégatif d'une autre molécule (ou de la même). Plus forte que les interactions de van der Waals, plus faible qu'une liaison covalente."},
+    {id:"prop-comparaison-liaison-ionique-covalente", type:"propriété", q:"Distinguer liaison ionique et liaison covalente", a:"Ionique : transfert d'électron(s), formation d'ions de charges opposées maintenus par attraction électrostatique (grande différence d'électronégativité). Covalente : mise en commun d'électrons entre atomes (différence d'électronégativité faible ou nulle)."}
+  ]
+});
