@@ -251,8 +251,17 @@ h1{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 6px
       <span class="sub" id="review-all-sub"></span>
     </button>
 
-    <div class="section-label">Matières</div>
-    <div class="subject-grid" id="subject-grid"></div>
+    <div class="section-label">Spé — 2e année</div>
+    <div class="settings-row">
+      <label for="select-subject-spe" class="settings-label">Choisir une matière</label>
+      <select id="select-subject-spe" class="settings-select"></select>
+    </div>
+
+    <div class="section-label">Sup — archivé (1re année)</div>
+    <div class="settings-row">
+      <label for="select-subject-sup" class="settings-label">Choisir une matière</label>
+      <select id="select-subject-sup" class="settings-select"></select>
+    </div>
 
     <div class="section-label">Réglages</div>
     <div class="settings-row">
@@ -554,6 +563,31 @@ function flatCards(filterFn){
 function subjectName(id){ var s = SUBJECTS.find(function(x){ return x.id === id; }); return s ? s.name : id; }
 function subjectCode(id){ var s = SUBJECTS.find(function(x){ return x.id === id; }); return s ? s.code : "??"; }
 
+// Année d'un cours : "spe" (2e année, actif) ou "sup" (1re année, archivé).
+// Un cours sans champ `year` (tous les cours existants avant l'ajout de cette
+// distinction) est considéré comme "sup" par défaut — aucune ré-upload nécessaire.
+function courseYear(course){ return course.year === "spe" ? "spe" : "sup"; }
+var YEAR_LABEL = { spe: "Spé", sup: "Sup" };
+
+// Construit la liste déroulante des matières pour une année donnée (ne liste
+// que les matières qui ont au moins un cours dans cette année).
+function populateYearSelect(selectEl, year){
+  var subjIds = {};
+  COURSES.forEach(function(c){ if(courseYear(c) === year) subjIds[c.subject] = true; });
+  var ordered = SUBJECTS.filter(function(s){ return subjIds[s.id]; });
+  if(ordered.length === 0){
+    selectEl.innerHTML = '<option value="">Aucun cours pour l\'instant</option>';
+    selectEl.disabled = true;
+    return;
+  }
+  selectEl.disabled = false;
+  selectEl.innerHTML = '<option value="">Choisir une matière…</option>' +
+    ordered.map(function(s){
+      var n = flatCards(function(c){ return c.subject === s.id && courseYear(c) === year; }).length;
+      return '<option value="' + s.id + '">' + s.name + ' — ' + n + ' cartes</option>';
+    }).join("");
+}
+
 // Découpe un id de chapitre (ex: "t5", "m15", "si1") en préfixe alphabétique + numéro,
 // pour pouvoir regrouper par sous-thème et trier numériquement (et non alphabétiquement).
 function parseChapterKey(id){
@@ -627,6 +661,7 @@ function resumeOrHome(){
 }
 
 var currentSubject = null;
+var currentYear = null;
 var session = null;
 
 discoverAndLoadCourses().then(function(){
@@ -735,7 +770,9 @@ function renderHome(){
     }
   });
 
-  var all = flatCards();
+  // Les stats et la révision globale ne portent que sur l'année active (Spé) :
+  // le Sup est gardé mais ne doit plus relancer de rappels quotidiens.
+  var all = flatCards(function(c){ return courseYear(c) === "spe"; });
   var due = all.filter(function(c){ return isDue(c.gid); });
   var mastered = all.filter(function(c){ return isMastered(c.gid); });
 
@@ -748,7 +785,7 @@ function renderHome(){
   var btn = document.getElementById("btn-review-all");
   if(all.length === 0){
     btn.disabled = true;
-    label.textContent = "Aucun cours pour l'instant";
+    label.textContent = "Aucun cours de Spé pour l'instant";
     sub.textContent = "";
   } else if(due.length > 0){
     btn.disabled = false;
@@ -760,29 +797,20 @@ function renderHome(){
     sub.textContent = "";
   }
 
-  var grid = document.getElementById("subject-grid");
-  grid.innerHTML = "";
-  SUBJECTS.forEach(function(subj){
-    var subjCards = flatCards(function(c){ return c.subject === subj.id; });
-    var subjDue = subjCards.filter(function(c){ return isDue(c.gid); }).length;
-    var card = document.createElement("div");
-    card.className = "subject-card" + (subjCards.length === 0 ? " empty" : "");
-    card.innerHTML =
-      '<span class="subj-code">' + subj.code + '</span>' +
-      '<div class="subj-name">' + subj.name + '</div>' +
-      '<div class="subj-meta' + (subjDue > 0 ? ' due' : '') + '">' +
-      (subjCards.length === 0 ? 'aucun cours' : subjCards.length + ' cartes' + (subjDue > 0 ? ' · ' + subjDue + ' à réviser' : '')) +
-      '</div>';
-    card.addEventListener("click", function(){ openSubject(subj.id); });
-    grid.appendChild(card);
-  });
+  var selSpe = document.getElementById("select-subject-spe");
+  var selSup = document.getElementById("select-subject-sup");
+  populateYearSelect(selSpe, "spe");
+  populateYearSelect(selSup, "sup");
+  selSpe.onchange = function(){ if(this.value) openSubject(this.value, "spe"); };
+  selSup.onchange = function(){ if(this.value) openSubject(this.value, "sup"); };
 }
 
-function openSubject(subjectId){
+function openSubject(subjectId, year){
   currentSubject = subjectId;
-  document.getElementById("subject-title").textContent = subjectName(subjectId);
+  currentYear = year;
+  document.getElementById("subject-title").textContent = subjectName(subjectId) + " — " + YEAR_LABEL[year];
 
-  var courses = COURSES.filter(function(c){ return c.subject === subjectId; });
+  var courses = COURSES.filter(function(c){ return c.subject === subjectId && courseYear(c) === year; });
   var list = document.getElementById("chapter-list");
   var emptyState = document.getElementById("subject-empty");
   var reviewBtn = document.getElementById("btn-review-subject");
@@ -795,7 +823,7 @@ function openSubject(subjectId){
   } else {
     emptyState.classList.add("hidden");
     reviewBtn.classList.remove("hidden");
-    var subjCards = flatCards(function(c){ return c.subject === subjectId; });
+    var subjCards = flatCards(function(c){ return c.subject === subjectId && courseYear(c) === year; });
     var subjDue = subjCards.filter(function(c){ return isDue(c.gid); }).length;
     reviewLabel.textContent = subjDue > 0 ? "Réviser cette matière (" + subjDue + ")" : "Réviser en avance";
 
@@ -827,7 +855,7 @@ function openSubject(subjectId){
 
       items.forEach(function(item){
         var course = item.course;
-        var cCards = flatCards(function(c){ return c.subject === subjectId && c.id === course.id; });
+        var cCards = flatCards(function(c){ return c.subject === subjectId && c.id === course.id && courseYear(c) === year; });
         var cDue = cCards.filter(function(c){ return isDue(c.gid); }).length;
         var cMastered = cCards.filter(function(c){ return isMastered(c.gid); }).length;
         var pct = Math.round((cMastered / course.cards.length) * 100);
@@ -850,7 +878,7 @@ function openSubject(subjectId){
     });
   }
 
-  reviewBtn.onclick = function(){ startSession(function(c){ return c.subject === subjectId; }); };
+  reviewBtn.onclick = function(){ startSession(function(c){ return c.subject === subjectId && courseYear(c) === year; }); };
   showScreen("subject");
 }
 
@@ -1010,7 +1038,7 @@ function showScreen(name){
   }
 }
 
-document.getElementById("btn-review-all").addEventListener("click", function(){ startSession(null); });
+document.getElementById("btn-review-all").addEventListener("click", function(){ startSession(function(c){ return courseYear(c) === "spe"; }); });
 document.getElementById("btn-subject-back").addEventListener("click", function(){ showScreen("home"); });
 document.getElementById("btn-quit").addEventListener("click", function(){ session = null; clearSavedSession(); showScreen(currentSubject ? "subject" : "home"); });
 document.getElementById("btn-summary-home").addEventListener("click", function(){ currentSubject = null; showScreen("home"); });
